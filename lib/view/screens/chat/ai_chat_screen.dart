@@ -146,7 +146,7 @@ class _AiPageState extends State<AiPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset(
-                      'images/sanjeevikalogo.png',
+                      'assets/images/sanjeevikalogo.png',
                       width: size / 3,
                     ),
                   ],

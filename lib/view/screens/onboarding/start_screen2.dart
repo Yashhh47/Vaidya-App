@@ -45,7 +45,7 @@ class _StartScreen2State extends State<StartScreen2> {
               decoration: BoxDecoration(
                   shape: BoxShape.circle, color: Colors.transparent),
               child: Image.asset(
-                'images/comment.png',
+                'assets/images/comment.png',
               ),
             ),
 

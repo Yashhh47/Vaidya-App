@@ -36,7 +36,7 @@ class StartScreen1 extends StatelessWidget {
                 color: Color(0xFFEFF6FF),
               ),
               child: Image.asset(
-                'images/pill.png',
+                'assets/images/pill.png',
                 width: size / 4,
               ),
             ),

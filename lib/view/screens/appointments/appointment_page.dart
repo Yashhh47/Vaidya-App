@@ -284,7 +284,7 @@ class AppointmentCard extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(30),
                 child: Image.asset(
-                  'assets/doctor_image.jpeg',
+                  'assets/images/doctor_image.jpeg',
                   width: 50,
                   height: 50,
                   fit: BoxFit.cover,

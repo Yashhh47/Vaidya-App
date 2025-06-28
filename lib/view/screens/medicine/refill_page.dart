@@ -52,7 +52,7 @@ class MedicineOrderCard extends StatelessWidget {
               borderRadius: BorderRadius.circular(width * 0.02),
             ),
             child: Image.asset(
-              'images/bluepilllogo.png',
+              'assets/images/bluepilllogo.png',
               width: width * 0.1,
               height: width * 0.1,
               fit: BoxFit.contain,

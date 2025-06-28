@@ -92,7 +92,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Image(
-                    image: const AssetImage("images/logo_image.png"),
+                    image: const AssetImage("assets/images/logo_image.png"),
                     width: width * 0.15, // 15% of screen width
                     height: width * 0.15, // Keep aspect ratio square
                   ),

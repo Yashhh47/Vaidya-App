@@ -46,7 +46,7 @@ class _StartScreen3State extends State<StartScreen3> {
                 shape: BoxShape.circle,
               ),
               child: Image.asset(
-                'images/shield.png',
+                'assets/images/shield.png',
                 width: size / 4,
               ),
             ),

@@ -44,7 +44,7 @@ class _getstartedscreenState extends State<getstartedscreen> {
                     height: size / 3,
                   ),
                   Image.asset(
-                    'images/sanjeevikalogo.png',
+                    'assets/images/sanjeevikalogo.png',
                     width: size / 4,
                   ),
                   SizedBox(

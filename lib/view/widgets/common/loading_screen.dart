@@ -45,7 +45,7 @@ class _loading_screenState extends State<loading_screen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  "images/sanjeevikalogo.png",
+                  "assets/images/sanjeevikalogo.png",
                   width: 75,
                 ),
                 SizedBox(
