@@ -61,7 +61,7 @@ class _QuickAccessSectionState extends State<QuickAccessSection> {
         child: Row(
           children: [
             Image(
-              image: AssetImage("images/q.png"),
+              image: AssetImage("assets/images/q.png"),
               width: width * 0.038,
             ),
             Text(

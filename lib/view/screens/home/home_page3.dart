@@ -294,7 +294,7 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                   Row(
                     children: [
                       Image.asset(
-                        "images/greenpilllogo.png",
+                        "assets/images/greenpilllogo.png",
                         width: width * 0.08,
                         height: width * 0.08,
                       ),
@@ -532,7 +532,7 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                   Row(
                     children: [
                       Image.asset(
-                        "images/greenpilllogo.png",
+                        "assets/images/greenpilllogo.png",
                         width: width * 0.08,
                         height: width * 0.08,
                       ),

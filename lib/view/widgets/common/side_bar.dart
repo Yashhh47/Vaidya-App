@@ -23,8 +23,6 @@ class CustomSideBar extends StatefulWidget {
 
 class _CustomSideBarState extends State<CustomSideBar> {
   late Datacontroller data;
-  late double width;
-  late double height;
 
   @override
   void initState() {
@@ -33,22 +31,17 @@ class _CustomSideBarState extends State<CustomSideBar> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Initialize SizeConfig with current context
-    SizeConfig.init(context);
-    width = SizeConfig.screenWidth;
-    height = SizeConfig.screenHeight;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
+
     return Drawer(
       elevation: 10.0,
       child: Column(
         children: [
           // Elegant header with gradient and better typography
-          _buildModernHeader(),
+          _buildModernHeader(width, height),
 
           // Main navigation area
           Expanded(
@@ -56,7 +49,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
               decoration: const BoxDecoration(
                 color: Colors.white,
               ),
-              child: _buildNavigationMenu(context),
+              child: _buildNavigationMenu(context, width, height),
             ),
           ),
         ],
@@ -65,10 +58,10 @@ class _CustomSideBarState extends State<CustomSideBar> {
   }
 
   /// Builds a modern header with gradient background
-  Widget _buildModernHeader() {
+  Widget _buildModernHeader(double width, double height) {
     return Container(
       width: double.infinity,
-      height: height * 0.25, // Responsive height
+      height: height * 0.25, // 25% of screen height
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [
@@ -90,20 +83,20 @@ class _CustomSideBarState extends State<CustomSideBar> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: height * 0.02),
+            SizedBox(height: height * 0.02), // 2% of screen height
 
             // App logo and name
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+              padding: EdgeInsets.symmetric(horizontal: width * 0.04), // 4% of screen width
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Image(
                     image: const AssetImage("images/logo_image.png"),
-                    width: width * 0.15,
-                    height: width * 0.15,
+                    width: width * 0.15, // 15% of screen width
+                    height: width * 0.15, // Keep aspect ratio square
                   ),
-                  SizedBox(width: width * 0.03),
+                  SizedBox(width: width * 0.03), // 3% of screen width
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,7 +104,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
                         Text(
                           'Sanjeevika',
                           style: style_(
-                            fontSize: width * 0.065,
+                            fontSize: width * 0.065, // 6.5% of screen width
                             fontWeight: FontWeight.bold,
                             color: const Color(0xff005014),
                           ),
@@ -119,7 +112,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
                         Text(
                           'Your Health Companion',
                           style: style_(
-                            fontSize: width * 0.035,
+                            fontSize: width * 0.035, // 3.5% of screen width
                             fontWeight: FontWeight.w600,
                             color: const Color(0xff005014),
                           ),
@@ -131,18 +124,18 @@ class _CustomSideBarState extends State<CustomSideBar> {
               ),
             ),
 
-            SizedBox(height: height * 0.02),
+            SizedBox(height: height * 0.02), // 2% of screen height
 
             // Welcome message or user info section
             Container(
-              margin: EdgeInsets.symmetric(horizontal: width * 0.04),
+              margin: EdgeInsets.symmetric(horizontal: width * 0.04), // 4% of screen width
               padding: EdgeInsets.symmetric(
-                horizontal: width * 0.04,
-                vertical: height * 0.015,
+                horizontal: width * 0.04, // 4% of screen width
+                vertical: height * 0.015, // 1.5% of screen height
               ),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(width * 0.03),
+                borderRadius: BorderRadius.circular(width * 0.03), // 3% of screen width
                 border: Border.all(color: const Color(0xff97FF8D)),
               ),
               child: Row(
@@ -150,14 +143,14 @@ class _CustomSideBarState extends State<CustomSideBar> {
                   Icon(
                     Icons.favorite,
                     color: CustomSideBar._primaryGreen,
-                    size: width * 0.05,
+                    size: width * 0.05, // 5% of screen width
                   ),
-                  SizedBox(width: width * 0.02),
+                  SizedBox(width: width * 0.02), // 2% of screen width
                   Expanded(
                     child: Text(
                       'Stay healthy, stay happy!',
                       style: style_(
-                        fontSize: width * 0.035,
+                        fontSize: width * 0.035, // 3.5% of screen width
                         fontWeight: FontWeight.w500,
                         color: CustomSideBar._primaryGreen,
                       ),
@@ -173,11 +166,11 @@ class _CustomSideBarState extends State<CustomSideBar> {
   }
 
   /// Builds the main navigation menu
-  Widget _buildNavigationMenu(BuildContext context) {
+  Widget _buildNavigationMenu(BuildContext context, double width, double height) {
     return SingleChildScrollView(
       child: Column(
         children: [
-          SizedBox(height: height * 0.02),
+          SizedBox(height: height * 0.02), // 2% of screen height
 
           // Primary navigation items
           _buildMenuSection([
@@ -222,9 +215,9 @@ class _CustomSideBarState extends State<CustomSideBar> {
                 transition: Transition.leftToRight,
               ),
             ),
-          ]),
+          ], width, height),
 
-          SizedBox(height: height * 0.02),
+          SizedBox(height: height * 0.02), // 2% of screen height
 
           _buildMenuSection([
             _MenuItemData(
@@ -232,13 +225,13 @@ class _CustomSideBarState extends State<CustomSideBar> {
               title: 'Settings',
               onTap: () => _navigateToSettings(context),
             ),
-          ]),
+          ], width, height),
 
           // Divider for visual separation
           Container(
             margin: EdgeInsets.symmetric(
-              horizontal: width * 0.04,
-              vertical: height * 0.015,
+              horizontal: width * 0.04, // 4% of screen width
+              vertical: height * 0.015, // 1.5% of screen height
             ),
             height: 1,
             color: Colors.grey.shade200,
@@ -246,8 +239,8 @@ class _CustomSideBarState extends State<CustomSideBar> {
 
           // Logout section
           Container(
-            margin: EdgeInsets.all(width * 0.04),
-            child: _buildLogoutButton(context),
+            margin: EdgeInsets.all(width * 0.04), // 4% of screen width
+            child: _buildLogoutButton(context, width, height),
           ),
         ],
       ),
@@ -255,13 +248,15 @@ class _CustomSideBarState extends State<CustomSideBar> {
   }
 
   /// Builds a section of menu items
-  Widget _buildMenuSection(List<_MenuItemData> items) {
+  Widget _buildMenuSection(List<_MenuItemData> items, double width, double height) {
     return Column(
       children: items
           .map((item) => _buildEnhancedMenuItem(
         icon: item.icon,
         title: item.title,
         onTap: item.onTap,
+        width: width,
+        height: height,
       ))
           .toList(),
     );
@@ -272,44 +267,46 @@ class _CustomSideBarState extends State<CustomSideBar> {
     required IconData icon,
     required String title,
     required VoidCallback onTap,
+    required double width,
+    required double height,
   }) {
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: width * 0.02,
-        vertical: height * 0.003,
+        horizontal: width * 0.02, // 2% of screen width
+        vertical: height * 0.003, // 0.3% of screen height
       ),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(width * 0.03),
+          borderRadius: BorderRadius.circular(width * 0.03), // 3% of screen width
           splashColor: CustomSideBar._lightGreen.withOpacity(0.3),
           highlightColor: CustomSideBar._lightGreen.withOpacity(0.2),
           child: Container(
             padding: EdgeInsets.symmetric(
-              horizontal: width * 0.04,
-              vertical: height * 0.015,
+              horizontal: width * 0.04, // 4% of screen width
+              vertical: height * 0.015, // 1.5% of screen height
             ),
             child: Row(
               children: [
                 Container(
-                  padding: EdgeInsets.all(width * 0.02),
+                  padding: EdgeInsets.all(width * 0.02), // 2% of screen width
                   decoration: BoxDecoration(
                     color: CustomSideBar._lightGreen.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(width * 0.02),
+                    borderRadius: BorderRadius.circular(width * 0.02), // 2% of screen width
                   ),
                   child: Icon(
                     icon,
                     color: CustomSideBar._iconColor,
-                    size: width * 0.05,
+                    size: width * 0.05, // 5% of screen width
                   ),
                 ),
-                SizedBox(width: width * 0.04),
+                SizedBox(width: width * 0.04), // 4% of screen width
                 Expanded(
                   child: Text(
                     title,
                     style: style_(
-                      fontSize: width * 0.04,
+                      fontSize: width * 0.04, // 4% of screen width
                       fontWeight: FontWeight.w500,
                       color: CustomSideBar._textColor,
                     ),
@@ -317,7 +314,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
                 ),
                 Icon(
                   Icons.arrow_forward_ios_rounded,
-                  size: width * 0.035,
+                  size: width * 0.035, // 3.5% of screen width
                   color: Colors.grey.shade400,
                 ),
               ],
@@ -329,37 +326,37 @@ class _CustomSideBarState extends State<CustomSideBar> {
   }
 
   /// Creates a stylish logout button
-  Widget _buildLogoutButton(BuildContext context) {
+  Widget _buildLogoutButton(BuildContext context, double width, double height) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: () => _handleLogout(context),
-        borderRadius: BorderRadius.circular(width * 0.03),
+        borderRadius: BorderRadius.circular(width * 0.03), // 3% of screen width
         child: Container(
           padding: EdgeInsets.symmetric(
-            horizontal: width * 0.04,
-            vertical: height * 0.015,
+            horizontal: width * 0.04, // 4% of screen width
+            vertical: height * 0.015, // 1.5% of screen height
           ),
           child: Row(
             children: [
               Container(
-                padding: EdgeInsets.all(width * 0.02),
+                padding: EdgeInsets.all(width * 0.02), // 2% of screen width
                 decoration: BoxDecoration(
                   color: Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(width * 0.02),
+                  borderRadius: BorderRadius.circular(width * 0.02), // 2% of screen width
                 ),
                 child: Icon(
                   Icons.logout_rounded,
                   color: Colors.red.shade600,
-                  size: width * 0.05,
+                  size: width * 0.05, // 5% of screen width
                 ),
               ),
-              SizedBox(width: width * 0.04),
+              SizedBox(width: width * 0.04), // 4% of screen width
               Expanded(
                 child: Text(
                   'Logout',
                   style: style_(
-                    fontSize: width * 0.04,
+                    fontSize: width * 0.04, // 4% of screen width
                     fontWeight: FontWeight.w500,
                     color: Colors.red.shade600,
                   ),
@@ -428,34 +425,38 @@ class _CustomSideBarState extends State<CustomSideBar> {
 
   /// Shows a modern, styled logout confirmation dialog
   void _showModernLogoutDialog(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
+
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(width * 0.05),
+            borderRadius: BorderRadius.circular(width * 0.05), // 5% of screen width
           ),
           title: Row(
             children: [
               Container(
-                padding: EdgeInsets.all(width * 0.02),
+                padding: EdgeInsets.all(width * 0.02), // 2% of screen width
                 decoration: BoxDecoration(
                   color: Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(width * 0.02),
+                  borderRadius: BorderRadius.circular(width * 0.02), // 2% of screen width
                 ),
                 child: Icon(
                   Icons.logout_rounded,
                   color: Colors.red.shade600,
-                  size: width * 0.06,
+                  size: width * 0.06, // 6% of screen width
                 ),
               ),
-              SizedBox(width: width * 0.03),
+              SizedBox(width: width * 0.03), // 3% of screen width
               Text(
                 'Logout',
                 style: style_(
                   fontWeight: FontWeight.bold,
-                  fontSize: width * 0.05,
+                  fontSize: width * 0.05, // 5% of screen width
                 ),
               ),
             ],
@@ -463,7 +464,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
           content: Text(
             'Are you sure you want to logout? You\'ll need to sign in again to access your account.',
             style: style_(
-              fontSize: width * 0.04,
+              fontSize: width * 0.04, // 4% of screen width
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -472,8 +473,8 @@ class _CustomSideBarState extends State<CustomSideBar> {
               onPressed: () => Navigator.of(context).pop(),
               style: TextButton.styleFrom(
                 padding: EdgeInsets.symmetric(
-                  horizontal: width * 0.06,
-                  vertical: height * 0.015,
+                  horizontal: width * 0.06, // 6% of screen width
+                  vertical: height * 0.015, // 1.5% of screen height
                 ),
               ),
               child: Text(
@@ -481,7 +482,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
                 style: style_(
                   color: Colors.grey.shade600,
                   fontWeight: FontWeight.w500,
-                  fontSize: width * 0.04,
+                  fontSize: width * 0.04, // 4% of screen width
                 ),
               ),
             ),
@@ -494,18 +495,18 @@ class _CustomSideBarState extends State<CustomSideBar> {
                 backgroundColor: Colors.red.shade600,
                 foregroundColor: Colors.white,
                 padding: EdgeInsets.symmetric(
-                  horizontal: width * 0.06,
-                  vertical: height * 0.015,
+                  horizontal: width * 0.06, // 6% of screen width
+                  vertical: height * 0.015, // 1.5% of screen height
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(width * 0.02),
+                  borderRadius: BorderRadius.circular(width * 0.02), // 2% of screen width
                 ),
               ),
               child: Text(
                 'Logout',
                 style: style_(
                   fontWeight: FontWeight.w600,
-                  fontSize: width * 0.04,
+                  fontSize: width * 0.04, // 4% of screen width
                   color: Colors.white,
                 ),
               ),
@@ -518,6 +519,8 @@ class _CustomSideBarState extends State<CustomSideBar> {
 
   /// Performs the actual logout operation
   void _performLogout(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     debugPrint('User logged out successfully');
 
     // Navigate to login page and clear all previous routes
@@ -530,13 +533,13 @@ class _CustomSideBarState extends State<CustomSideBar> {
           'Logged out successfully',
           style: style_(
             color: Colors.white,
-            fontSize: width * 0.04,
+            fontSize: width * 0.04, // 4% of screen width
           ),
         ),
         backgroundColor: CustomSideBar._primaryGreen,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(width * 0.02),
+          borderRadius: BorderRadius.circular(width * 0.02), // 2% of screen width
         ),
       ),
     );

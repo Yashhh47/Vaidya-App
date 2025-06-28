@@ -210,14 +210,14 @@ class _HomePageState extends State<HomePage> {
       ),
       actions: [
         _buildUserProfile(width, height),
-        SizedBox(width: width * 0.02),
+        SizedBox(width: width * 0.01),
       ],
     );
   }
 
   Widget _buildAppBarLogo(double width, double height) {
     return Image.asset(
-      'images/sanjeevikalogo.png',
+      'assets/images/sanjeevikalogo.png',
       height: width * 0.13,
       width: width * 0.14,
       errorBuilder: (context, error, stackTrace) {
@@ -240,9 +240,14 @@ class _HomePageState extends State<HomePage> {
 
   Widget _buildUserProfile(double width, double height) {
     return Container(
-      height: width * 0.12,
-      padding: EdgeInsets.fromLTRB(width * 0.015, 0, width * 0.03, 0),
-      margin: EdgeInsets.only(right: width * 0.015),
+      height: width * 0.11, // Reduced from 0.12 to 0.08 (8% of screen width)
+      padding: EdgeInsets.fromLTRB(
+          width * 0.01, // Reduced from 0.015 to 0.01 (1% of screen width)
+          0,
+          width * 0.02, // Reduced from 0.03 to 0.02 (2% of screen width)
+          0
+      ),
+      margin: EdgeInsets.only(right: width * 0.01), // Reduced from 0.015 to 0.01 (1% of screen width)
       decoration: BoxDecoration(
         color: const Color(0xFFE8FAE7),
         border: Border.all(color: const Color(0xFF97DF4B), width: 1),
@@ -252,26 +257,26 @@ class _HomePageState extends State<HomePage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CircleAvatar(
-            radius: width * 0.04,
+            radius: width * 0.03, // Reduced from 0.04 to 0.025 (2.5% of screen width)
             backgroundColor: Colors.white,
             child: Icon(
               Icons.person,
               color: Color(0XFF005014),
-              size: width * 0.035,
+              size: width * 0.03, // Reduced from 0.035 to 0.025 (2.5% of screen width)
             ),
           ),
           Container(
-            margin: EdgeInsets.only(left: width * 0.018),
+            margin: EdgeInsets.only(left: width * 0.015), // Reduced from 0.018 to 0.012 (1.2% of screen width)
             child: Obx(() => Text(
-                  data.patient_ID.value.isNotEmpty
-                      ? data.patient_ID.value
-                      : 'SJVK-LOADING',
-                  style: style_(
-                    color: Color(0xFF005014),
-                    fontWeight: FontWeight.w900,
-                    fontSize: width * 0.045,
-                  ),
-                )),
+              data.patient_ID.value.isNotEmpty
+                  ? data.patient_ID.value
+                  : 'SJVK-LOADING',
+              style: style_(
+                color: Color(0xFF005014),
+                fontWeight: FontWeight.w900,
+                fontSize: width * 0.035, // Reduced from 0.045 to 0.032 (3.2% of screen width)
+              ),
+            )),
           ),
         ],
       ),

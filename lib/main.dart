@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:sanjeevika/view/screens/splash_screen/splash_screen.dart';
+import 'package:get/get.dart';
+import 'package:sanjeevika/view/screens/home/home_page.dart';
+import 'package:sanjeevika/view/widgets/common/side_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'firebase_options.dart';
+import 'viewmodels/data_controller.dart';
+import 'utils/functions_uses.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
-  runApp(const MyApp());
+  if (Firebase.apps.isEmpty) {
+    await Firebase.initializeApp();
+  }
+  Get.put(Datacontroller());
+  runApp(Myapp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class Myapp extends StatelessWidget {
+  const Myapp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Sanjeevika',
+    SizeConfig.init(context);
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
-      ),
-      home: const SplashScreen(),
+      theme: ThemeData(fontFamily: 'Montserrat'),
+      home: Builder(builder: (context) {
+        double measuretxt = MediaQuery.of(context).size.width * 0.95;
+        Get.find<Datacontroller>().Setsize(measuretxt);
+
+        return HomePage();
+      }),
     );
   }
 }

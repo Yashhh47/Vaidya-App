@@ -50,19 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAVgTXltfH-Y1lfJy-_v6068Ep3o1Kr3SU',
-    appId: '1:1029891313601:android:ded3431cad75e8fb48a940',
-    messagingSenderId: '1029891313601',
-    projectId: 'team-sanjeevni',
-    storageBucket: 'team-sanjeevni.firebasestorage.app',
+    apiKey: 'AIzaSyAL6tlK_3SGqx3CuSpt7YiX8nkGnyUuKRY',
+    appId: '1:698149460410:android:aa666d4b7535ab2b2e2583',
+    messagingSenderId: '698149460410',
+    projectId: 'sanjeevika-13654',
+    storageBucket: 'sanjeevika-13654.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAxzxw0hyA99N6xurCgWxeYw5gAiuecEos',
-    appId: '1:1029891313601:ios:82b75b1b8400ee8c48a940',
-    messagingSenderId: '1029891313601',
-    projectId: 'team-sanjeevni',
-    storageBucket: 'team-sanjeevni.firebasestorage.app',
-    iosBundleId: 'com.sanjeevniteams.sanjeevika',
+    apiKey: 'AIzaSyD0T6pPYRfkcT6DKNGRR9MCH_Ne1HDOvOE',
+    appId: '1:698149460410:ios:865404fc1b375ba52e2583',
+    messagingSenderId: '698149460410',
+    projectId: 'sanjeevika-13654',
+    storageBucket: 'sanjeevika-13654.firebasestorage.app',
+    iosClientId: '698149460410-88rum9cejqgaqefnqm5s79vj0bhp56of.apps.googleusercontent.com',
+    iosBundleId: 'com.yourcompany.sanjeevika',
   );
 }
