@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:sanjeevika/view/screens/chat/ai_chat_screen.dart';
 import 'package:sanjeevika/viewmodels/data_controller.dart';
 import 'package:sanjeevika/view/screens/emergency/emergency.dart';
 import 'package:sanjeevika/view/screens/auth/login_page.dart';
@@ -87,7 +88,8 @@ class _CustomSideBarState extends State<CustomSideBar> {
 
             // App logo and name
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: width * 0.04), // 4% of screen width
+              padding: EdgeInsets.symmetric(
+                  horizontal: width * 0.04), // 4% of screen width
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
@@ -128,14 +130,16 @@ class _CustomSideBarState extends State<CustomSideBar> {
 
             // Welcome message or user info section
             Container(
-              margin: EdgeInsets.symmetric(horizontal: width * 0.04), // 4% of screen width
+              margin: EdgeInsets.symmetric(
+                  horizontal: width * 0.04), // 4% of screen width
               padding: EdgeInsets.symmetric(
                 horizontal: width * 0.04, // 4% of screen width
                 vertical: height * 0.015, // 1.5% of screen height
               ),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(width * 0.03), // 3% of screen width
+                borderRadius:
+                    BorderRadius.circular(width * 0.03), // 3% of screen width
                 border: Border.all(color: const Color(0xff97FF8D)),
               ),
               child: Row(
@@ -166,7 +170,8 @@ class _CustomSideBarState extends State<CustomSideBar> {
   }
 
   /// Builds the main navigation menu
-  Widget _buildNavigationMenu(BuildContext context, double width, double height) {
+  Widget _buildNavigationMenu(
+      BuildContext context, double width, double height) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -202,7 +207,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
               icon: Icons.chat_bubble_outline,
               title: 'AI Assistant',
               onTap: () => Get.to(
-                InformationForm(),
+                AiPage(),
                 transition: Transition.leftToRight,
                 duration: const Duration(milliseconds: 350),
               ),
@@ -248,16 +253,17 @@ class _CustomSideBarState extends State<CustomSideBar> {
   }
 
   /// Builds a section of menu items
-  Widget _buildMenuSection(List<_MenuItemData> items, double width, double height) {
+  Widget _buildMenuSection(
+      List<_MenuItemData> items, double width, double height) {
     return Column(
       children: items
           .map((item) => _buildEnhancedMenuItem(
-        icon: item.icon,
-        title: item.title,
-        onTap: item.onTap,
-        width: width,
-        height: height,
-      ))
+                icon: item.icon,
+                title: item.title,
+                onTap: item.onTap,
+                width: width,
+                height: height,
+              ))
           .toList(),
     );
   }
@@ -279,7 +285,8 @@ class _CustomSideBarState extends State<CustomSideBar> {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
-          borderRadius: BorderRadius.circular(width * 0.03), // 3% of screen width
+          borderRadius:
+              BorderRadius.circular(width * 0.03), // 3% of screen width
           splashColor: CustomSideBar._lightGreen.withOpacity(0.3),
           highlightColor: CustomSideBar._lightGreen.withOpacity(0.2),
           child: Container(
@@ -293,7 +300,8 @@ class _CustomSideBarState extends State<CustomSideBar> {
                   padding: EdgeInsets.all(width * 0.02), // 2% of screen width
                   decoration: BoxDecoration(
                     color: CustomSideBar._lightGreen.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(width * 0.02), // 2% of screen width
+                    borderRadius: BorderRadius.circular(
+                        width * 0.02), // 2% of screen width
                   ),
                   child: Icon(
                     icon,
@@ -343,7 +351,8 @@ class _CustomSideBarState extends State<CustomSideBar> {
                 padding: EdgeInsets.all(width * 0.02), // 2% of screen width
                 decoration: BoxDecoration(
                   color: Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(width * 0.02), // 2% of screen width
+                  borderRadius:
+                      BorderRadius.circular(width * 0.02), // 2% of screen width
                 ),
                 child: Icon(
                   Icons.logout_rounded,
@@ -400,7 +409,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-        const MyMedicinePage(),
+            const MyMedicinePage(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return SlideTransition(
             position: animation.drive(
@@ -435,7 +444,8 @@ class _CustomSideBarState extends State<CustomSideBar> {
       builder: (BuildContext context) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(width * 0.05), // 5% of screen width
+            borderRadius:
+                BorderRadius.circular(width * 0.05), // 5% of screen width
           ),
           title: Row(
             children: [
@@ -443,7 +453,8 @@ class _CustomSideBarState extends State<CustomSideBar> {
                 padding: EdgeInsets.all(width * 0.02), // 2% of screen width
                 decoration: BoxDecoration(
                   color: Colors.red.shade50,
-                  borderRadius: BorderRadius.circular(width * 0.02), // 2% of screen width
+                  borderRadius:
+                      BorderRadius.circular(width * 0.02), // 2% of screen width
                 ),
                 child: Icon(
                   Icons.logout_rounded,
@@ -499,7 +510,8 @@ class _CustomSideBarState extends State<CustomSideBar> {
                   vertical: height * 0.015, // 1.5% of screen height
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(width * 0.02), // 2% of screen width
+                  borderRadius:
+                      BorderRadius.circular(width * 0.02), // 2% of screen width
                 ),
               ),
               child: Text(
@@ -539,7 +551,8 @@ class _CustomSideBarState extends State<CustomSideBar> {
         backgroundColor: CustomSideBar._primaryGreen,
         behavior: SnackBarBehavior.floating,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(width * 0.02), // 2% of screen width
+          borderRadius:
+              BorderRadius.circular(width * 0.02), // 2% of screen width
         ),
       ),
     );
