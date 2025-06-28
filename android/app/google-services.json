@@ -12,7 +12,20 @@
           "package_name": "com.sanjeevniteams.sanjeevika"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1029891313601-2ukpkc20mr2mplen4e1lurq8mbgob2gj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sanjeevniteams.sanjeevika",
+            "certificate_hash": "61ff0d2a6847681912c794c23c597c81d05608cb"
+          }
+        },
+        {
+          "client_id": "1029891313601-91ci68i0283md50pk4f2mev46u7j1se5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAVgTXltfH-Y1lfJy-_v6068Ep3o1Kr3SU"
@@ -20,7 +33,55 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1029891313601-91ci68i0283md50pk4f2mev46u7j1se5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1029891313601-5s4qksms68n2828amt42qhke12b8p55t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sanjeevniteams.sanjeevika"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1029891313601:android:febd48bb18de858348a940",
+        "android_client_info": {
+          "package_name": "com.sanjeevniteams.sanjeevika_doctor_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1029891313601-91ci68i0283md50pk4f2mev46u7j1se5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVgTXltfH-Y1lfJy-_v6068Ep3o1Kr3SU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1029891313601-91ci68i0283md50pk4f2mev46u7j1se5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1029891313601-5s4qksms68n2828amt42qhke12b8p55t.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sanjeevniteams.sanjeevika"
+              }
+            }
+          ]
         }
       }
     }
