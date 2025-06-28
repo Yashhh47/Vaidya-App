@@ -106,11 +106,17 @@ class _EmergencyPageState extends State<EmergencyPage> {
                 Icon(Icons.shield_outlined,
                     color: Colors.red[600], size: width * 0.06),
                 SizedBox(width: width * 0.02),
-                Text('Quick Emergency Services',
-                    style: style_(
-                        fontSize: width * 0.045,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87)),
+          Image(
+            image: AssetImage("assets/images/q.png"),
+            width: width * 0.038,
+          ),
+          Text(
+            "uick Access",
+            style: style_(
+              fontSize: width * 0.05,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
               ],
             ),
             SizedBox(height: height * 0.02),
@@ -119,7 +125,8 @@ class _EmergencyPageState extends State<EmergencyPage> {
                 Expanded(
                   child: _buildEmergencyServiceButton(
                     context,
-                    title: 'City Hospital Emergency',
+                    title: 'HOSPITAL',
+                    subtitle: "Hospital Emergency",
                     number: '108',
                     color: const Color(0xFFFF4444),
                     showIcon: true,
@@ -232,21 +239,16 @@ class _EmergencyPageState extends State<EmergencyPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (showIcon) ...[
-              Icon(Icons.local_hospital_rounded,
-                  color: Colors.white, size: width * 0.045),
-              SizedBox(height: height * 0.003),
-            ],
             Text(title,
                 style: style_(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: width * 0.023),
+                    fontSize: width * 0.04),
                 textAlign: TextAlign.center,
                 maxLines: 2),
             if (subtitle != null)
               Text(subtitle,
-                  style: style_(color: Colors.white, fontSize: width * 0.018),
+                  style: style_(color: Colors.white, fontSize: width * 0.03),
                   textAlign: TextAlign.center),
             SizedBox(height: height * 0.003),
             Text(number,

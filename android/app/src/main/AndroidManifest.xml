@@ -1,4 +1,18 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Permissions -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- WhatsApp visibility for Android 11+ -->
+    <queries>
+        <!-- Existing intent -->
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT" />
+            <data android:mimeType="text/plain" />
+        </intent>
+
+        <!-- NEW: Allow querying WhatsApp -->
+        <package android:name="com.whatsapp" />
+    </queries>
     <application
         android:label="sanjeevika"
         android:name="${applicationName}"

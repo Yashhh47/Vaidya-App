@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sanjeevika/view/screens/home/home_page.dart';
-import 'package:sanjeevika/view/widgets/common/side_bar.dart';
+import 'package:sanjeevika/view/screens/medicine/refill_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
 import 'viewmodels/data_controller.dart';
 import 'utils/functions_uses.dart';
 
@@ -29,7 +27,7 @@ class Myapp extends StatelessWidget {
         double measuretxt = MediaQuery.of(context).size.width * 0.95;
         Get.find<Datacontroller>().Setsize(measuretxt);
 
-        return HomePage();
+        return RefillPage();
       }),
     );
   }

@@ -132,10 +132,10 @@ class _RefillPageState extends State<RefillPage> {
       setState(() {
         medicines = allMedicines
             .map((medicine) => {
-                  'name': '${medicine['name']} ${medicine['quantity']}',
-                  'condition': medicine['disease'],
-                  'dosage': _getDosageText(medicine['timing']),
-                })
+          'name': '${medicine['name']} ${medicine['quantity']}',
+          'condition': medicine['disease'],
+          'dosage': _getDosageText(medicine['timing']),
+        })
             .toList();
         isLoading = false;
       });
@@ -277,7 +277,7 @@ class _RefillPageState extends State<RefillPage> {
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius:
-                                    BorderRadius.circular(width * 0.02),
+                                BorderRadius.circular(width * 0.02),
                               ),
                               child: Icon(
                                 Icons.remove,
@@ -320,7 +320,7 @@ class _RefillPageState extends State<RefillPage> {
                               decoration: BoxDecoration(
                                 color: const Color(0xFF4CAF50),
                                 borderRadius:
-                                    BorderRadius.circular(width * 0.02),
+                                BorderRadius.circular(width * 0.02),
                               ),
                               child: Icon(
                                 Icons.add,
@@ -358,7 +358,7 @@ class _RefillPageState extends State<RefillPage> {
                               backgroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius:
-                                    BorderRadius.circular(width * 0.02),
+                                BorderRadius.circular(width * 0.02),
                               ),
                             ),
                             child: Text(
@@ -396,7 +396,7 @@ class _RefillPageState extends State<RefillPage> {
                                   vertical: height * 0.015),
                               shape: RoundedRectangleBorder(
                                 borderRadius:
-                                    BorderRadius.circular(width * 0.02),
+                                BorderRadius.circular(width * 0.02),
                               ),
                             ),
                             child: Row(
@@ -499,41 +499,41 @@ class _RefillPageState extends State<RefillPage> {
               Expanded(
                 child: isLoading
                     ? Center(
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              const Color(0xFF4CAF50)),
-                        ),
-                      )
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                        const Color(0xFF4CAF50)),
+                  ),
+                )
                     : medicines.isEmpty
-                        ? Center(
-                            child: Padding(
-                              padding: EdgeInsets.all(width * 0.08),
-                              child: Text(
-                                'No medicines found.\nPlease add medicines in your profile.',
-                                textAlign: TextAlign.center,
-                                style: style_(
-                                  fontSize: width * 0.04,
-                                  color: Colors.grey[600]!,
-                                ),
-                              ),
-                            ),
-                          )
-                        : ListView.builder(
-                            padding:
-                                EdgeInsets.symmetric(horizontal: width * 0.04),
-                            itemCount: medicines.length,
-                            itemBuilder: (context, index) {
-                              return MedicineOrderCard(
-                                medicineName: medicines[index]['name']!,
-                                condition: medicines[index]['condition']!,
-                                dosage: medicines[index]['dosage']!,
-                                onTapToOrder: () {
-                                  _showQuantityDialog(
-                                      medicines[index]['name']!);
-                                },
-                              );
-                            },
-                          ),
+                    ? Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(width * 0.08),
+                    child: Text(
+                      'No medicines found.\nPlease add medicines in your profile.',
+                      textAlign: TextAlign.center,
+                      style: style_(
+                        fontSize: width * 0.04,
+                        color: Colors.grey[600]!,
+                      ),
+                    ),
+                  ),
+                )
+                    : ListView.builder(
+                  padding:
+                  EdgeInsets.symmetric(horizontal: width * 0.04),
+                  itemCount: medicines.length,
+                  itemBuilder: (context, index) {
+                    return MedicineOrderCard(
+                      medicineName: medicines[index]['name']!,
+                      condition: medicines[index]['condition']!,
+                      dosage: medicines[index]['dosage']!,
+                      onTapToOrder: () {
+                        _showQuantityDialog(
+                            medicines[index]['name']!);
+                      },
+                    );
+                  },
+                ),
               ),
             ],
           ),
