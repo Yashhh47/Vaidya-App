@@ -1,13 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sanjeevika/view/screens/home/home_page.dart';
+import 'package:sanjeevika/view/screens/splash/splash_screen.dart';
 import 'package:sanjeevika/view/widgets/common/side_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'viewmodels/data_controller.dart';
 import 'utils/functions_uses.dart';
+import 'package:sanjeevika/services/user_session.dart';
+
+Future<void> initializeApp() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize GetX controller
+  Get.put(Datacontroller());
+
+  // Check and restore user session
+  bool isLoggedIn = await UserSession.isUserLoggedIn();
+
+  if (isLoggedIn) {
+    print('User session restored successfully');
+    // Additional initialization if needed
+  }
+}
 
 void main() async {
+  await initializeApp();
+
   WidgetsFlutterBinding.ensureInitialized();
   if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp();
@@ -29,7 +48,7 @@ class Myapp extends StatelessWidget {
         double measuretxt = MediaQuery.of(context).size.width * 0.95;
         Get.find<Datacontroller>().Setsize(measuretxt);
 
-        return HomePage();
+        return SplashScreen();
       }),
     );
   }

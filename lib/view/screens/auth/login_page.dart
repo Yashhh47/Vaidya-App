@@ -7,6 +7,7 @@ import '../../../utils/functions_uses.dart';
 import '../../../services/auth_functions.dart';
 import 'package:get/get.dart';
 import 'package:sanjeevika/viewmodels/data_controller.dart';
+import 'package:sanjeevika/services/user_session.dart'; // Updated import
 
 class LoginPage extends StatefulWidget {
   @override
@@ -15,10 +16,22 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   late Datacontroller data;
+
   @override
   void initState() {
     super.initState();
     data = Get.find<Datacontroller>();
+    // Check if user is already logged in
+    _checkExistingSession();
+  }
+
+  // Enhanced session checking
+  void _checkExistingSession() async {
+    bool isLoggedIn = await UserSession.isUserLoggedIn();
+    if (isLoggedIn) {
+      // User is already logged in, navigate to home/getstarted screen
+      Get.off(() => getstartedscreen());
+    }
   }
 
   final formKey = GlobalKey<FormState>();
@@ -56,10 +69,23 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       if (user != null) {
+        // Enhanced session saving with profile data sync
+        await UserSession.saveUserSession(
+          patientId: user.uid,
+          email: user.email ?? phoneController.text.trim(),
+        );
+
+        data.set_patient_email(user.email ?? phoneController.text.trim());
+
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("Login successful!")),
         );
         navigateWithLoading();
+      } else {
+        Get.back(); // Close loading dialog
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("OTP verification failed")),
+        );
       }
     }
   }
@@ -68,12 +94,18 @@ class _LoginPageState extends State<LoginPage> {
     final usercredential = await signInWithGoogle();
     if (usercredential != null) {
       final user = usercredential.user;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Signed in user as ${user!.displayName}')),
+
+      // Enhanced session saving with profile data sync
+      await UserSession.saveUserSession(
+        patientId: user!.uid,
+        email: user.email!,
       );
 
-      data.set_patient_email(user!.email.toString());
+      data.set_patient_email(user.email.toString());
 
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Signed in user as ${user.displayName}')),
+      );
       Get.off(getstartedscreen());
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -118,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                 SizedBox(height: size / 15),
                 Text(
                   'Sanjeevika',
-                  style: style_(
+                  style: TextStyle(
                     fontSize: size / 12,
                     fontWeight: FontWeight.w900,
                     color: Colors.green.shade900,

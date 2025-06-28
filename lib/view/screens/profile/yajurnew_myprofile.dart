@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sanjeevika/services/patient_crud.dart';
-import '../../../utils/functions_uses.dart'; // Import the responsive utilities
+import '../../../utils/functions_uses.dart';
+import 'package:sanjeevika/services/user_session.dart';
 
 class MyProfilePage extends StatefulWidget {
   const MyProfilePage({super.key});
 
   @override
-  State<MyProfilePage> createState() => _MyProfilePageState();
+  State<MyProfilePage> createState() => _FixedMyProfilePageState();
 }
 
-class _MyProfilePageState extends State<MyProfilePage>
+class _FixedMyProfilePageState extends State<MyProfilePage>
     with SingleTickerProviderStateMixin {
   // Form and animation controllers
   final _formKey = GlobalKey<FormState>();
@@ -35,7 +36,7 @@ class _MyProfilePageState extends State<MyProfilePage>
   bool _isEditing = false;
   String? _selectedGender;
   String? _selectedBloodGroup;
-  bool _isLoadingData = true; // Add loading state for data fetching
+  bool _isLoadingData = true;
 
   // Dropdown options
   static const List<String> _genderOptions = ['Male', 'Female', 'Other'];
@@ -56,41 +57,48 @@ class _MyProfilePageState extends State<MyProfilePage>
     _loadUserData();
   }
 
-  /// Load existing user data from Firestore
+  /// Load existing user data from Firestore with enhanced error handling
   void _loadUserData() async {
     try {
-      // Import data from Firestore
+      setState(() {
+        _isLoadingData = true;
+      });
+
+      // Try to get data from PatientDatabase (which now has fallback to local storage)
       final patientDatabase = PatientDatabase();
       final data = await patientDatabase.getPatientProfile();
 
-      print(data);
-      if (data != null) {
-        // Set field values from Firestore data
+      print('Loaded profile data: $data');
+
+      if (data != null && data['personalInfo'] != null) {
+        final personalInfo = data['personalInfo'];
+
+        // Set field values from profile data
         setState(() {
-          _controllers['name']?.text = data['personalInfo']['name'] ?? '';
-          _controllers['age']?.text =
-              data['personalInfo']['age']?.toString() ?? '';
-          _controllers['dob']?.text = data['personalInfo']['dateOfBirth'] ?? '';
+          _controllers['name']?.text = personalInfo['name']?.toString() ?? '';
+          _controllers['age']?.text = personalInfo['age']?.toString() ?? '';
+          _controllers['dob']?.text =
+              personalInfo['dateOfBirth']?.toString() ?? '';
+          _controllers['email']?.text = personalInfo['email']?.toString() ?? '';
+          _controllers['mobile']?.text =
+              personalInfo['phone']?.toString() ?? '';
+          _controllers['address']?.text =
+              personalInfo['address']?.toString() ?? '';
 
+          // Handle dropdown selections with validation
+          String? bloodGroup = personalInfo['bloodGroup']?.toString();
           _selectedBloodGroup =
-              _bloodGroupOptions.contains(data['personalInfo']['bloodGroup'])
-                  ? data['personalInfo']['bloodGroup']
-                  : null;
+              _bloodGroupOptions.contains(bloodGroup) ? bloodGroup : null;
 
-          _controllers['email']?.text = data['personalInfo']['email'] ?? '';
-          _controllers['mobile']?.text = data['personalInfo']['phone'] ?? '';
-
-          _controllers['address']?.text = data['personalInfo']['address'] ?? '';
-
-          _selectedGender =
-              _genderOptions.contains(data['personalInfo']['gender'])
-                  ? data['personalInfo']['gender']
-                  : null;
+          String? gender = personalInfo['gender']?.toString();
+          _selectedGender = _genderOptions.contains(gender) ? gender : null;
 
           _isLoadingData = false;
         });
+
+        print('Profile data loaded successfully');
       } else {
-        print('No data found or error occurred.');
+        print('No profile data found or personalInfo is null');
         setState(() {
           _isLoadingData = false;
         });
@@ -100,6 +108,7 @@ class _MyProfilePageState extends State<MyProfilePage>
       setState(() {
         _isLoadingData = false;
       });
+      _showErrorSnackBar('Error loading profile data: $e');
     }
   }
 
@@ -134,8 +143,22 @@ class _MyProfilePageState extends State<MyProfilePage>
           iconTheme: IconThemeData(color: Colors.green.shade900),
         ),
         body: Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.green.shade600),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                valueColor:
+                    AlwaysStoppedAnimation<Color>(Colors.green.shade600),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Loading your profile...',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -180,14 +203,12 @@ class _MyProfilePageState extends State<MyProfilePage>
               _buildSectionHeader(
                   'Personal Information', Icons.person, Colors.blue, width),
               _buildPersonalInfoSection(width, height),
-
               SizedBox(height: height * 0.035),
 
               // Contact Information Section
               _buildSectionHeader('Contact Information', Icons.contact_phone,
                   Colors.green, width),
               _buildContactInfoSection(width, height),
-
               SizedBox(height: height * 0.05),
 
               // Action buttons
@@ -568,9 +589,7 @@ class _MyProfilePageState extends State<MyProfilePage>
                   ),
           ),
         ),
-
         SizedBox(height: height * 0.015),
-
         // Cancel button
         Center(
           child: TextButton(
@@ -590,7 +609,6 @@ class _MyProfilePageState extends State<MyProfilePage>
   }
 
   // Event Handlers and Utility Methods
-
   void _toggleEditMode() {
     setState(() {
       _isEditing = !_isEditing;
@@ -678,13 +696,13 @@ class _MyProfilePageState extends State<MyProfilePage>
           Container(
             padding: EdgeInsets.all(width * 0.04),
             decoration: BoxDecoration(
-              color: Colors.grey,
+              color: color.withOpacity(0.1),
               borderRadius: BorderRadius.circular(width * 0.04),
             ),
             child: Icon(
               icon,
               size: width * 0.08,
-              color: Colors.grey,
+              color: color,
             ),
           ),
           SizedBox(height: width * 0.02),
@@ -705,6 +723,7 @@ class _MyProfilePageState extends State<MyProfilePage>
         maxHeight: 512,
         imageQuality: 80,
       );
+
       if (image != null) {
         setState(() {
           _profileImage = File(image.path);
@@ -742,7 +761,6 @@ class _MyProfilePageState extends State<MyProfilePage>
       setState(() {
         _controllers['dob']!.text =
             '${picked.day}/${picked.month}/${picked.year}';
-
         // Calculate age
         final age = DateTime.now().year - picked.year;
         _controllers['age']!.text = age.toString();
@@ -779,6 +797,18 @@ class _MyProfilePageState extends State<MyProfilePage>
       bool success = await patientDatabase.updatePatientProfile(updatedData);
 
       if (success) {
+        // Update session data using the correct method name
+        await UserSession.updateUserProfileInSession(
+          name: _controllers['name']?.text,
+          phone: _controllers['mobile']?.text,
+          dob: _controllers['dob']?.text,
+          bloodGroup: _selectedBloodGroup,
+          email: _controllers['email']?.text,
+          address: _controllers['address']?.text,
+          gender: _selectedGender,
+          age: int.tryParse(_controllers['age']?.text ?? '0'),
+        );
+
         setState(() {
           _isEditing = false;
           _isLoading = false;
@@ -806,7 +836,6 @@ class _MyProfilePageState extends State<MyProfilePage>
 
   void _showSuccessSnackBar(String message) {
     double width = SizeConfig.screenWidth;
-
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
@@ -829,7 +858,6 @@ class _MyProfilePageState extends State<MyProfilePage>
 
   void _showErrorSnackBar(String message) {
     double width = SizeConfig.screenWidth;
-
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(

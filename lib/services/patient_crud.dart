@@ -8,20 +8,34 @@ import 'package:get/get.dart';
 
 class PatientDatabase {
   final data = Get.find<Datacontroller>();
-
   late String pid = data.patient_ID.value;
 
-  /// Save complete patient profile to Firestore (overwrites existing data/removes extra data)
+  /// Save complete patient profile to Firestore and local storage
   Future<bool> savePatientProfile(Map<String, dynamic> profileData) async {
     try {
-      // Save all patient data (overwrites entire document)
-      await FirebaseFirestore.instance.collection('patients').doc(pid).set({
-        'personalInfo': profileData['personalInfo'],
-        'diseases': profileData['diseases'],
-        'emergencyContacts': profileData['emergencyContacts'],
-        'savedAt': FieldValue.serverTimestamp(),
-      });
+      // Ensure we have the current patient ID
+      pid = data.patient_ID.value;
 
+      if (pid.isEmpty) {
+        print('Error: Patient ID is empty');
+        return false;
+      }
+
+      // Add metadata
+      profileData['savedAt'] = FieldValue.serverTimestamp();
+      profileData['lastModified'] = DateTime.now().toIso8601String();
+
+      // Save to Firestore
+      await FirebaseFirestore.instance
+          .collection('patients')
+          .doc(pid)
+          .set(profileData, SetOptions(merge: true));
+
+      // Save to local storage
+      await UserSession.saveProfileData(profileData);
+
+      print(
+          'Patient profile saved successfully to both Firestore and local storage');
       return true;
     } catch (e) {
       print('Error saving patient profile: $e');
@@ -29,32 +43,71 @@ class PatientDatabase {
     }
   }
 
-  /// Fetch patient profile from Firestore
+  /// Fetch patient profile with fallback to local storage
   Future<Map<String, dynamic>?> getPatientProfile() async {
     try {
+      pid = data.patient_ID.value;
+
+      if (pid.isEmpty) {
+        print('Error: Patient ID is empty');
+        return await UserSession.getLocalProfileData();
+      }
+
+      // Try to get from Firestore first
       DocumentSnapshot doc = await FirebaseFirestore.instance
           .collection('patients')
           .doc(pid)
           .get();
 
       if (doc.exists) {
-        return doc.data() as Map<String, dynamic>;
+        Map<String, dynamic> firestoreData = doc.data() as Map<String, dynamic>;
+
+        // Save to local storage for offline access
+        await UserSession.saveProfileData(firestoreData);
+
+        return firestoreData;
       } else {
-        return null;
+        // Fallback to local storage
+        print('No Firestore data found, using local storage');
+        return await UserSession.getLocalProfileData();
       }
     } catch (e) {
-      print('Error getting patient profile: $e');
-      return null;
+      print(
+          'Error getting patient profile from Firestore, trying local storage: $e');
+      // Fallback to local storage
+      return await UserSession.getLocalProfileData();
     }
   }
 
-  /// Update specific fields in patient profile without overwriting other data
+  /// Update specific fields in patient profile
   Future<bool> updatePatientProfile(Map<String, dynamic> updatedData) async {
     try {
+      pid = data.patient_ID.value;
+
+      if (pid.isEmpty) {
+        print('Error: Patient ID is empty');
+        return false;
+      }
+
+      updatedData['lastModified'] = DateTime.now().toIso8601String();
+
+      // Update Firestore
       await FirebaseFirestore.instance
           .collection('patients')
           .doc(pid)
           .set(updatedData, SetOptions(merge: true));
+
+      // Update local storage
+      Map<String, dynamic>? currentData =
+          await UserSession.getLocalProfileData();
+      if (currentData != null) {
+        // Deep merge the updated data
+        _deepMerge(currentData, updatedData);
+        await UserSession.saveProfileData(currentData);
+      } else {
+        // If no current data, save the updated data as new
+        await UserSession.saveProfileData(updatedData);
+      }
 
       return true;
     } catch (e) {
@@ -63,10 +116,30 @@ class PatientDatabase {
     }
   }
 
-  /// Delete patient profile document from Firestore
+  /// Helper method to deep merge maps
+  void _deepMerge(Map<String, dynamic> target, Map<String, dynamic> source) {
+    source.forEach((key, value) {
+      if (value is Map<String, dynamic> &&
+          target[key] is Map<String, dynamic>) {
+        _deepMerge(target[key], value);
+      } else {
+        target[key] = value;
+      }
+    });
+  }
+
+  /// Delete patient profile document from Firestore and local storage
   Future<bool> deletePatientProfile() async {
     try {
+      pid = data.patient_ID.value;
+
+      if (pid.isEmpty) {
+        print('Error: Patient ID is empty');
+        return false;
+      }
+
       await FirebaseFirestore.instance.collection('patients').doc(pid).delete();
+      await UserSession.clearUserSession();
 
       return true;
     } catch (e) {
@@ -75,7 +148,7 @@ class PatientDatabase {
     }
   }
 
-  /// Get emergency contacts from Firestore
+  /// Get emergency contacts from profile data
   Future<List<Map<String, dynamic>>> getEmergencyContacts() async {
     try {
       final data = await getPatientProfile();
@@ -95,7 +168,6 @@ class PatientDatabase {
       final data = await getPatientProfile();
       if (data != null && data['diseases'] != null) {
         List<Map<String, dynamic>> allMedicines = [];
-
         for (var disease in data['diseases']) {
           String diseaseName = disease['name'] ?? 'Unknown Disease';
           if (disease['medicines'] != null) {
@@ -144,10 +216,8 @@ class PatientDatabase {
             'takenTime': '',
             'date': todayString,
           };
-
           todaysMedications.add(morningMedicine);
 
-          // Add to missed medicines if status is missed
           if (status == 'missed') {
             await MedicineStatusService.addMissedMedicine(morningMedicine);
           }
@@ -167,10 +237,8 @@ class PatientDatabase {
             'takenTime': '',
             'date': todayString,
           };
-
           todaysMedications.add(afternoonMedicine);
 
-          // Add to missed medicines if status is missed
           if (status == 'missed') {
             await MedicineStatusService.addMissedMedicine(afternoonMedicine);
           }
@@ -190,16 +258,13 @@ class PatientDatabase {
             'takenTime': '',
             'date': todayString,
           };
-
           todaysMedications.add(eveningMedicine);
 
-          // Add to missed medicines if status is missed
           if (status == 'missed') {
             await MedicineStatusService.addMissedMedicine(eveningMedicine);
           }
         }
       }
-
       return todaysMedications;
     } catch (e) {
       print('Error getting today\'s medications: $e');
