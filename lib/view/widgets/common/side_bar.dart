@@ -84,7 +84,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: height * 0.02), // 2% of screen height
+            SizedBox(height: height * 0.05), // 2% of screen height
 
             // App logo and name
             Padding(
@@ -180,11 +180,6 @@ class _CustomSideBarState extends State<CustomSideBar> {
           // Primary navigation items
           _buildMenuSection([
             _MenuItemData(
-              icon: Icons.person_rounded,
-              title: 'My Profile',
-              onTap: () => _navigateToProfile(context),
-            ),
-            _MenuItemData(
               icon: Icons.home_rounded,
               title: 'Home',
               onTap: () => _navigateToHome(context),
@@ -224,14 +219,6 @@ class _CustomSideBarState extends State<CustomSideBar> {
 
           SizedBox(height: height * 0.02), // 2% of screen height
 
-          _buildMenuSection([
-            _MenuItemData(
-              icon: Icons.settings_rounded,
-              title: 'Settings',
-              onTap: () => _navigateToSettings(context),
-            ),
-          ], width, height),
-
           // Divider for visual separation
           Container(
             margin: EdgeInsets.symmetric(
@@ -246,6 +233,21 @@ class _CustomSideBarState extends State<CustomSideBar> {
           Container(
             margin: EdgeInsets.all(width * 0.04), // 4% of screen width
             child: _buildLogoutButton(context, width, height),
+          ),
+          SizedBox(height: height * 0.05),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                '~Made by Team Sanjeevni 💚',
+                style: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Montserrat',
+                  color: Color(0xff005014),
+                  fontSize: width * 0.04,
+                ),
+              )
+            ],
           ),
         ],
       ),

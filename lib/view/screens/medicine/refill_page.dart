@@ -136,10 +136,11 @@ class _RefillPageState extends State<RefillPage> {
       setState(() {
         medicines = allMedicines
             .map((medicine) => {
-          'name': '${medicine['name']} ${medicine['quantity']}',
-          'condition': medicine['disease'],
-          'dosage': _getDosageText(medicine['timing']),
-        })
+                  'name': '${medicine['name']} ',
+                  'condition': medicine['disease'],
+                  'dosage': _getDosageText(medicine['timing']),
+                  'originalData': medicine, // Store original data for dialog
+                })
             .toList();
         isLoading = false;
       });
@@ -184,14 +185,16 @@ Please confirm the availability and delivery details.
 Thank you!''';
 
       String encodedMessage = Uri.encodeComponent(message);
-      String whatsappUrl = 'whatsapp://send?phone=$whatsappNumber&text=$encodedMessage';
+      String whatsappUrl =
+          'whatsapp://send?phone=$whatsappNumber&text=$encodedMessage';
 
       final uri = Uri.parse(whatsappUrl);
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       } else {
         // Open Play Store as fallback
-        final fallbackUri = Uri.parse("https://play.google.com/store/apps/details?id=com.whatsapp");
+        final fallbackUri = Uri.parse(
+            "https://play.google.com/store/apps/details?id=com.whatsapp");
         await launchUrl(fallbackUri, mode: LaunchMode.externalApplication);
       }
     } catch (e) {
@@ -207,180 +210,169 @@ Thank you!''';
   }
 
   void _showQuantityDialog(String medicineName) {
+    // Find the medicine data for this medicine name
+    final medicineData = medicines.firstWhere(
+      (med) => med['name'] == medicineName,
+      orElse: () => {},
+    );
+
+    // Extract the required information
+    final String displayName = medicineData['name'] ?? medicineName;
+    final String disease = medicineData['condition'] ?? '';
+    final String timing = medicineData['dosage'] ?? '';
+
     showDialog(
       context: context,
       barrierDismissible: true,
       builder: (BuildContext context) {
         return StatefulBuilder(
           builder: (context, setDialogState) {
-            double width = SizeConfig.screenWidth;
-            double height = SizeConfig.screenHeight;
+            double width = MediaQuery.of(context).size.width;
+            double height = MediaQuery.of(context).size.height;
 
-            return Center(
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: width * 0.08),
-                padding: EdgeInsets.all(width * 0.06),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(width * 0.04),
-                ),
+            return Dialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 24),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
+                    // Top green icon in light background
                     Container(
-                      padding: EdgeInsets.all(width * 0.03),
+                      padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(width * 0.03),
+                        shape: BoxShape.circle,
+                        color: const Color(0xFFE9FBF1), // soft green background
                       ),
-                      child: Icon(
-                        Icons.shopping_cart_outlined,
-                        color: const Color(0xFF4CAF50),
-                        size: width * 0.08,
+                      child: const Icon(
+                        Icons.inventory_2_outlined,
+                        color: Color(0xFF00C853), // bright green icon
+                        size: 36,
                       ),
                     ),
-                    SizedBox(height: height * 0.012),
-                    Text(
+
+                    const SizedBox(height: 20),
+
+                    // Title
+                    const Text(
                       'Select Quantity',
-                      style: style_(
-                        fontSize: width * 0.045,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF1B1B1F),
                       ),
                     ),
+
+                    const SizedBox(height: 16),
+
+                    // Medicine Info Box - Updated with dynamic data
                     Container(
-                      padding: EdgeInsets.all(width * 0.03),
-                      margin: EdgeInsets.symmetric(vertical: height * 0.01),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        border: Border.all(
-                          color: const Color(0xFFBBF7D0),
-                          width: 1,
-                        ),
-                        borderRadius: BorderRadius.circular(width * 0.03),
-                        color: Colors.white,
+                        color: const Color(0xFFF9FAFB),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            medicineName,
-                            style: style_(
-                              fontSize: width * 0.04,
+                            displayName,
+                            style: const TextStyle(
                               fontWeight: FontWeight.w600,
-                              color: Colors.black87,
+                              fontSize: 16,
+                              color: Color(0xFF1B1B1F),
                             ),
+                            textAlign: TextAlign.center,
                           ),
-                          SizedBox(height: height * 0.005),
+                          const SizedBox(height: 4),
                           Text(
-                            'Medicine Refill',
-                            style: style_(
-                              fontSize: width * 0.035,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.grey,
-                            ),
+                            disease,
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.grey),
+                            textAlign: TextAlign.center,
                           ),
                           Text(
-                            'As prescribed',
-                            style: style_(
-                              fontSize: width * 0.03,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.grey,
-                            ),
+                            timing,
+                            style: const TextStyle(
+                                fontSize: 14, color: Colors.grey),
+                            textAlign: TextAlign.center,
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(height: height * 0.025),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: width * 0.04,
-                        vertical: height * 0.01,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(width * 0.03),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              if (selectedQuantity > 1) {
-                                setDialogState(() {
-                                  selectedQuantity--;
-                                });
-                              }
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(width * 0.02),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius:
-                                BorderRadius.circular(width * 0.02),
-                              ),
-                              child: Icon(
-                                Icons.remove,
-                                color: Colors.grey,
-                                size: width * 0.05,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: width * 0.025),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: width * 0.02,
-                              vertical: height * 0.008,
-                            ),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: const Color(0xFFBBF7D0),
-                                width: 1,
-                              ),
-                              borderRadius: BorderRadius.circular(width * 0.02),
-                            ),
-                            child: Text(
-                              selectedQuantity.toString(),
-                              style: style_(
-                                fontSize: width * 0.06,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: width * 0.06),
-                          GestureDetector(
-                            onTap: () {
+
+                    const SizedBox(height: 20),
+
+                    // Quantity Selector
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Minus Button
+                        IconButton(
+                          icon: const Icon(Icons.remove),
+                          onPressed: () {
+                            if (selectedQuantity > 1) {
                               setDialogState(() {
-                                selectedQuantity++;
+                                selectedQuantity--;
                               });
-                            },
-                            child: Container(
-                              padding: EdgeInsets.all(width * 0.02),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF4CAF50),
-                                borderRadius:
-                                BorderRadius.circular(width * 0.02),
-                              ),
-                              child: Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: width * 0.05,
-                              ),
+                            }
+                          },
+                          color: Colors.grey,
+                          iconSize: 28,
+                        ),
+
+                        // Quantity Box
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                                color: const Color(0xFFBBF7D0), width: 2),
+                            borderRadius: BorderRadius.circular(12),
+                            color: const Color(0xFFF0FFF4),
+                          ),
+                          child: Text(
+                            '$selectedQuantity',
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1B1B1F),
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+
+                        // Plus Button
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            setDialogState(() {
+                              selectedQuantity++;
+                            });
+                          },
+                          color: Colors.white,
+                          iconSize: 28,
+                          style: IconButton.styleFrom(
+                            backgroundColor: const Color(0xFF00C853),
+                            shape: const CircleBorder(),
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: height * 0.012),
+
+                    const SizedBox(height: 12),
+
+                    // Info Text
                     Text(
-                      'Requesting $selectedQuantity pack(s) of $medicineName',
-                      style: style_(
-                        fontSize: width * 0.03,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.grey,
-                      ),
+                      'Requesting $selectedQuantity pack(s) of $displayName',
+                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: height * 0.03),
+
+                    const SizedBox(height: 24),
+
+                    // Action Buttons
                     Row(
                       children: [
                         Expanded(
@@ -392,41 +384,33 @@ Thank you!''';
                               });
                             },
                             style: TextButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
-                                  vertical: height * 0.015),
-                              backgroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              backgroundColor: const Color(0xFFF0F1F4),
                               shape: RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius.circular(width * 0.02),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: Text(
+                            child: const Text(
                               'Cancel',
-                              style: style_(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w500,
-                                fontSize: width * 0.035,
-                              ),
+                              style: TextStyle(color: Colors.black87),
                             ),
                           ),
                         ),
-                        SizedBox(width: width * 0.03),
+                        const SizedBox(width: 12),
                         Expanded(
-                          child: ElevatedButton(
+                          child: ElevatedButton.icon(
                             onPressed: () async {
                               Navigator.of(context).pop();
 
-                              // Set state for success notification
                               setState(() {
                                 orderedQuantity = selectedQuantity;
-                                orderedMedicineName = medicineName;
+                                orderedMedicineName = displayName;
                                 showSuccessNotification = true;
                               });
 
-                              // Send WhatsApp message
-                              await _sendWhatsAppMessage(medicineName, selectedQuantity);
+                              await _sendWhatsAppMessage(
+                                  displayName, selectedQuantity);
 
-                              // Hide success notification after 3 seconds
                               Future.delayed(const Duration(seconds: 3), () {
                                 if (mounted) {
                                   setState(() {
@@ -435,38 +419,24 @@ Thank you!''';
                                 }
                               });
 
-                              // Reset quantity
                               setState(() {
                                 selectedQuantity = 1;
                               });
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF4CAF50),
-                              padding: EdgeInsets.symmetric(
-                                  vertical: height * 0.015),
+                              backgroundColor: const Color(0xFF00C853),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
                               shape: RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius.circular(width * 0.02),
+                                borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                  size: width * 0.045,
-                                ),
-                                SizedBox(width: width * 0.01),
-                                Text(
-                                  'OK',
-                                  style: style_(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: width * 0.035,
-                                  ),
-                                ),
-                              ],
+                            icon: const Icon(Icons.check, color: Colors.white),
+                            label: const Text(
+                              'OK',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
@@ -549,41 +519,41 @@ Thank you!''';
               Expanded(
                 child: isLoading
                     ? Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                        const Color(0xFF4CAF50)),
-                  ),
-                )
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              const Color(0xFF4CAF50)),
+                        ),
+                      )
                     : medicines.isEmpty
-                    ? Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(width * 0.08),
-                    child: Text(
-                      'No medicines found.\nPlease add medicines in your profile.',
-                      textAlign: TextAlign.center,
-                      style: style_(
-                        fontSize: width * 0.04,
-                        color: Colors.grey[600]!,
-                      ),
-                    ),
-                  ),
-                )
-                    : ListView.builder(
-                  padding:
-                  EdgeInsets.symmetric(horizontal: width * 0.04),
-                  itemCount: medicines.length,
-                  itemBuilder: (context, index) {
-                    return MedicineOrderCard(
-                      medicineName: medicines[index]['name']!,
-                      condition: medicines[index]['condition']!,
-                      dosage: medicines[index]['dosage']!,
-                      onTapToOrder: () {
-                        _showQuantityDialog(
-                            medicines[index]['name']!);
-                      },
-                    );
-                  },
-                ),
+                        ? Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(width * 0.08),
+                              child: Text(
+                                'No medicines found.\nPlease add medicines in your profile.',
+                                textAlign: TextAlign.center,
+                                style: style_(
+                                  fontSize: width * 0.04,
+                                  color: Colors.grey[600]!,
+                                ),
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            padding:
+                                EdgeInsets.symmetric(horizontal: width * 0.04),
+                            itemCount: medicines.length,
+                            itemBuilder: (context, index) {
+                              return MedicineOrderCard(
+                                medicineName: medicines[index]['name']!,
+                                condition: medicines[index]['condition']!,
+                                dosage: medicines[index]['dosage']!,
+                                onTapToOrder: () {
+                                  _showQuantityDialog(
+                                      medicines[index]['name']!);
+                                },
+                              );
+                            },
+                          ),
               ),
             ],
           ),
