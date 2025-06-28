@@ -4,12 +4,16 @@ import 'package:sanjeevika/view/screens/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'viewmodels/data_controller.dart';
 import 'utils/functions_uses.dart';
+import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp();
   }
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+  ]);
   Get.put(Datacontroller());
   runApp(Myapp());
 }

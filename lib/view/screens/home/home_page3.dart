@@ -195,8 +195,8 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
     return GestureDetector(
       onTap: () => _showMedicationBottomSheet(),
       child: Container(
-        height: width * 0.4,
-        margin: EdgeInsets.symmetric(horizontal: width * 0.02),
+        height: width * 0.45,
+        margin: EdgeInsets.symmetric(horizontal: width * 0.01),
         child: Stack(
           children: [
             if (medications.length > 2)
@@ -212,7 +212,11 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                   medications[2]['takenTime'] ?? '',
                   width * 0.82,
                   0.6,
-                  red_color,
+                  medications[2]['status'] == 'taken'
+                      ? green_color
+                      : medications[2]['status'] == 'pending'
+                          ? blue_color
+                          : red_color,
                 ),
               ),
             if (medications.length > 1)
@@ -228,7 +232,11 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                   medications[1]['takenTime'] ?? '',
                   width * 0.85,
                   0.8,
-                  blue_color,
+                  medications[1]['status'] == 'taken'
+                      ? green_color
+                      : medications[1]['status'] == 'pending'
+                          ? blue_color
+                          : red_color,
                 ),
               ),
             if (medications.isNotEmpty)
@@ -244,7 +252,11 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                   medications[0]['takenTime'] ?? '',
                   width * 0.88,
                   1.0,
-                  green_color,
+                  medications[0]['status'] == 'taken'
+                      ? green_color
+                      : medications[0]['status'] == 'pending'
+                          ? blue_color
+                          : red_color,
                 ),
               ),
           ],
@@ -270,12 +282,12 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
     return Opacity(
       opacity: opacity,
       child: Container(
-        height: width * 0.32,
-        width: cardWidth,
+        height: width * 0.35,
+        width: width / 1.09,
         padding: EdgeInsets.all(width * 0.03),
         decoration: BoxDecoration(
           gradient: LinearGradient(colors: colors),
-          borderRadius: BorderRadius.circular(width * 0.04),
+          borderRadius: BorderRadius.circular(width / 15),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -293,11 +305,21 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                 children: [
                   Row(
                     children: [
-                      Image.asset(
-                        "assets/images/greenpilllogo.png",
-                        width: width * 0.08,
-                        height: width * 0.08,
-                      ),
+                      if (medications[0]['status'] == 'pending')
+                        Image.asset(
+                          "assets/images/bluepilllogo.png",
+                          width: width * 0.12,
+                        ),
+                      if (medications[0]['status'] == 'taken')
+                        Image.asset(
+                          "assets/images/greenpilllogo.png",
+                          width: width * 0.12,
+                        ),
+                      if (medications[0]['status'] == 'missed')
+                        Image.asset(
+                          "assets/images/redpilllogo.png",
+                          width: width * 0.12,
+                        ),
                       SizedBox(width: width * 0.02),
                       Expanded(
                         child: Column(
@@ -306,14 +328,14 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                             Text(
                               time,
                               style: style_(
-                                fontSize: width * 0.035,
+                                fontSize: width * 0.045,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
                               timing,
                               style: style_(
-                                fontSize: width * 0.03,
+                                fontSize: width * 0.040,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -326,7 +348,7 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                   Text(
                     medicine,
                     style: style_(
-                      fontSize: width * 0.032,
+                      fontSize: width * 0.035,
                       fontWeight: FontWeight.w900,
                       color: Color(0xff08009C),
                     ),
@@ -335,7 +357,7 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                   Text(
                     disease,
                     style: style_(
-                      fontSize: width * 0.032,
+                      fontSize: width * 0.035,
                       fontWeight: FontWeight.w900,
                       color: Color(0xff004B79),
                     ),
@@ -344,16 +366,21 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
               ),
             ),
             Container(
-              width: width * 0.25,
-              height: width * 0.2,
+              width: width * 0.35,
+              height: width * 0.25,
               decoration: BoxDecoration(
-                color:
-                    status == 'taken' ? Color(0xffF2FFEC) : Color(0xffEAFDFF),
-                borderRadius: BorderRadius.circular(width * 0.03),
+                color: status == 'taken'
+                    ? Color(0xffF2FFEC)
+                    : status == 'missed'
+                        ? Color(0xffFFF6F6)
+                        : Color(0xffEAFDFF),
+                borderRadius: BorderRadius.circular(width * 0.05),
                 border: Border.all(
                     color: status == 'taken'
-                        ? Color(0xff97FF8D)
-                        : Color(0xff5BE3C3),
+                        ? Color(0xff73DD69)
+                        : status == 'missed'
+                            ? Color(0xffFF7676)
+                            : Color(0xff5BE3C3),
                     width: 2),
               ),
               child: Column(
@@ -362,7 +389,7 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                   Text(
                     status == 'taken' ? 'TAKEN' : 'PENDING',
                     style: style_(
-                      fontSize: width * 0.04,
+                      fontSize: width * 0.055,
                       fontWeight: FontWeight.bold,
                       color: status == 'taken'
                           ? Color(0xff205100)
@@ -509,11 +536,11 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
 
       return Container(
         margin: EdgeInsets.symmetric(vertical: height * 0.008),
-        height: width * 0.32,
-        padding: EdgeInsets.all(width * 0.03),
+        height: width * 0.35,
+        padding: EdgeInsets.all(width * 0.035),
         decoration: BoxDecoration(
           gradient: LinearGradient(colors: colors),
-          borderRadius: BorderRadius.circular(width * 0.04),
+          borderRadius: BorderRadius.circular(width * 0.055),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -531,11 +558,21 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                 children: [
                   Row(
                     children: [
-                      Image.asset(
-                        "assets/images/greenpilllogo.png",
-                        width: width * 0.08,
-                        height: width * 0.08,
-                      ),
+                      if (medication['status'] == "taken")
+                        Image.asset(
+                          "assets/images/greenpilllogo.png",
+                          width: width * 0.12,
+                        ),
+                      if (medication['status'] == "pending")
+                        Image.asset(
+                          "assets/images/bluepilllogo.png",
+                          width: width * 0.12,
+                        ),
+                      if (medication['status'] == "missed")
+                        Image.asset(
+                          "assets/images/redpilllogo.png",
+                          width: width * 0.12,
+                        ),
                       SizedBox(width: width * 0.02),
                       Expanded(
                         child: Column(
@@ -544,14 +581,14 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                             Text(
                               '${medication['time']}',
                               style: style_(
-                                fontSize: width * 0.035,
+                                fontSize: width * 0.045,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             Text(
                               '${medication['timing']}',
                               style: style_(
-                                fontSize: width * 0.03,
+                                fontSize: width * 0.040,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -564,7 +601,7 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                   Text(
                     '${medication['medicine']}',
                     style: style_(
-                      fontSize: width * 0.032,
+                      fontSize: width * 0.037,
                       fontWeight: FontWeight.w900,
                       color: Color(0xff08009C),
                     ),
@@ -573,7 +610,7 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                   Text(
                     '${medication['disease']}',
                     style: style_(
-                      fontSize: width * 0.032,
+                      fontSize: width * 0.037,
                       fontWeight: FontWeight.w900,
                       color: Color(0xff004B79),
                     ),
@@ -584,11 +621,11 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
             GestureDetector(
               onTap: () => _handleMedicationAction(medication),
               child: Container(
-                width: width * 0.28,
-                height: width * 0.22,
+                width: width * 0.37,
+                height: width * 0.27,
                 decoration: BoxDecoration(
                   color: buttonfillcolor,
-                  borderRadius: BorderRadius.circular(width * 0.03),
+                  borderRadius: BorderRadius.circular(width * 0.06),
                   border: Border.all(color: borderColor, width: 2),
                 ),
                 child: Column(
@@ -598,14 +635,14 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                       Text(
                         statusText,
                         style: style_(
-                          fontSize: width * 0.025,
+                          fontSize: width * 0.030,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
                     Text(
                       buttonText,
                       style: style_(
-                        fontSize: width * 0.035,
+                        fontSize: width * 0.045,
                         fontWeight: FontWeight.bold,
                         color: buttontextcolor,
                       ),
@@ -615,7 +652,7 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                       Text(
                         medication['takenTime'],
                         style: style_(
-                          fontSize: width * 0.025,
+                          fontSize: width * 0.035,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -624,7 +661,7 @@ class _TodaysMedicationsSectionState extends State<TodaysMedicationsSection> {
                       Text(
                         medication['takenTime'],
                         style: style_(
-                          fontSize: width * 0.025,
+                          fontSize: width * 0.035,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
