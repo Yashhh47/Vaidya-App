@@ -18,7 +18,7 @@ class _AiPageState extends State<AiPage> {
       text:
           "Hello! Welcome to Sanjeevika App. I'm your AI health assistant.\nHow can I help you today?",
       isBot: true,
-      time: "11:51 PM",
+      time: "",
     ),
   ];
 
@@ -78,7 +78,7 @@ class _AiPageState extends State<AiPage> {
     final hour = now.hour > 12 ? now.hour - 12 : now.hour;
     final minute = now.minute.toString().padLeft(2, '0');
     final period = now.hour >= 12 ? 'PM' : 'AM';
-    return "\${hour == 0 ? 12 : hour}:\$minute \$period";
+    return "${hour == 0 ? 12 : hour}:$minute $period";
   }
 
   @override

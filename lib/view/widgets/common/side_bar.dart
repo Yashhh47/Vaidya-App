@@ -185,11 +185,6 @@ class _CustomSideBarState extends State<CustomSideBar> {
               onTap: () => _navigateToHome(context),
             ),
             _MenuItemData(
-              icon: Icons.medication_rounded,
-              title: 'My Medicine',
-              onTap: () => _navigateToMedicine(context),
-            ),
-            _MenuItemData(
               icon: Icons.edit,
               title: 'Edit Patient Details',
               onTap: () => Get.to(
