@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 import 'package:sanjeevika/view/widgets/common/loading_screen.dart';
 import 'package:sanjeevika/services/patient_crud.dart';
+import 'package:sanjeevika/services/user_session.dart';
 import '../../../viewmodels/data_controller.dart';
 import 'package:get/get.dart';
 import '../home/home_page.dart';
@@ -22,7 +23,6 @@ class _InformationFormState extends State<InformationForm> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _dobController = TextEditingController();
-
   String _selectedBloodGroup = '';
   final List<String> _bloodGroups = [
     'A+',
@@ -54,73 +54,31 @@ class _InformationFormState extends State<InformationForm> {
     _loadExistingData();
   }
 
-  // Load existing data from Firestore
+  // Enhanced data loading with better error handling and fallbacks
   Future<void> _loadExistingData() async {
     try {
+      setState(() {
+        _isLoadingData = true;
+      });
+
       final patientDatabase = PatientDatabase();
-      final profileData = await patientDatabase.getPatientProfile();
+
+      // Try to get data from Firestore first, then fallback to local storage
+      Map<String, dynamic>? profileData =
+          await patientDatabase.getPatientProfile();
+
+      // If no data found, try to force sync
+      if (profileData == null) {
+        print('No profile data found, attempting force sync...');
+        profileData = await UserSession.forceSync();
+      }
 
       if (profileData != null) {
-        // Load personal info
-        if (profileData['personalInfo'] != null) {
-          final personalInfo = profileData['personalInfo'];
-          _nameController.text = personalInfo['name'] ?? '';
-          _phoneController.text = personalInfo['phone'] ?? '';
-          _dobController.text = personalInfo['dateOfBirth'] ?? '';
-          _selectedBloodGroup = personalInfo['bloodGroup'] ?? '';
-
-          // Set data controller values
-          data.set_patient_name(personalInfo['name'] ?? '');
-          data.set_patient_phonenumber(personalInfo['phone'] ?? '');
-          data.set_patient_dob(personalInfo['dateOfBirth'] ?? '');
-          data.set_patient_blood_group(personalInfo['bloodGroup'] ?? '');
-        }
-
-        // Load diseases and medicines
-        if (profileData['diseases'] != null &&
-            profileData['diseases'].isNotEmpty) {
-          _diseases.clear();
-          for (var diseaseData in profileData['diseases']) {
-            DiseaseInfo disease = DiseaseInfo();
-            disease.nameController.text = diseaseData['name'] ?? '';
-
-            if (diseaseData['medicines'] != null &&
-                diseaseData['medicines'].isNotEmpty) {
-              disease.medicines.clear();
-              for (var medicineData in diseaseData['medicines']) {
-                Medicine medicine = Medicine();
-                medicine.nameController.text = medicineData['name'] ?? '';
-                medicine.quantityController.text =
-                    medicineData['quantity'] ?? '';
-
-                if (medicineData['timing'] != null) {
-                  medicine.beforeMeal =
-                      medicineData['timing']['beforeMeal'] ?? false;
-                  medicine.afterMeal =
-                      medicineData['timing']['afterMeal'] ?? false;
-                  medicine.morning = medicineData['timing']['morning'] ?? false;
-                  medicine.afternoon =
-                      medicineData['timing']['afternoon'] ?? false;
-                  medicine.evening = medicineData['timing']['evening'] ?? false;
-                }
-                disease.medicines.add(medicine);
-              }
-            }
-            _diseases.add(disease);
-          }
-        }
-
-        // Load emergency contacts
-        if (profileData['emergencyContacts'] != null &&
-            profileData['emergencyContacts'].isNotEmpty) {
-          _emergencyContacts.clear();
-          for (var contactData in profileData['emergencyContacts']) {
-            EmergencyContact contact = EmergencyContact();
-            contact.nameController.text = contactData['name'] ?? '';
-            contact.phoneController.text = contactData['phone'] ?? '';
-            _emergencyContacts.add(contact);
-          }
-        }
+        await _populateFormWithData(profileData);
+      } else {
+        print('No existing data found, starting with empty form');
+        // Initialize with empty data but ensure data controller has basic info
+        _initializeEmptyForm();
       }
 
       setState(() {
@@ -131,7 +89,107 @@ class _InformationFormState extends State<InformationForm> {
       setState(() {
         _isLoadingData = false;
       });
+      _showErrorMessage('Error loading data. Starting with empty form.');
     }
+  }
+
+  Future<void> _populateFormWithData(Map<String, dynamic> profileData) async {
+    try {
+      // Load personal info
+      if (profileData['personalInfo'] != null) {
+        final personalInfo = profileData['personalInfo'];
+        _nameController.text = personalInfo['name'] ?? '';
+        _phoneController.text = personalInfo['phone'] ?? '';
+        _dobController.text = personalInfo['dateOfBirth'] ?? '';
+        _selectedBloodGroup = personalInfo['bloodGroup'] ?? '';
+
+        // Update data controller
+        data.set_patient_name(personalInfo['name'] ?? '');
+        data.set_patient_phonenumber(personalInfo['phone'] ?? '');
+        data.set_patient_dob(personalInfo['dateOfBirth'] ?? '');
+        data.set_patient_blood_group(personalInfo['bloodGroup'] ?? '');
+
+        // Generate and set patient ID if not already set
+        if (data.patient_ID.value.isEmpty &&
+            personalInfo['name'] != null &&
+            personalInfo['dateOfBirth'] != null &&
+            personalInfo['bloodGroup'] != null) {
+          String patientId = getPatientID(personalInfo['name'],
+              personalInfo['dateOfBirth'], personalInfo['bloodGroup']);
+          data.set_patient_ID(patientId);
+        }
+      }
+
+      // Load diseases and medicines
+      if (profileData['diseases'] != null &&
+          profileData['diseases'].isNotEmpty) {
+        _diseases.clear();
+        for (var diseaseData in profileData['diseases']) {
+          DiseaseInfo disease = DiseaseInfo();
+          disease.nameController.text = diseaseData['name'] ?? '';
+
+          if (diseaseData['medicines'] != null &&
+              diseaseData['medicines'].isNotEmpty) {
+            disease.medicines.clear();
+            for (var medicineData in diseaseData['medicines']) {
+              Medicine medicine = Medicine();
+              medicine.nameController.text = medicineData['name'] ?? '';
+              medicine.quantityController.text = medicineData['quantity'] ?? '';
+
+              if (medicineData['timing'] != null) {
+                medicine.beforeMeal =
+                    medicineData['timing']['beforeMeal'] ?? false;
+                medicine.afterMeal =
+                    medicineData['timing']['afterMeal'] ?? false;
+                medicine.morning = medicineData['timing']['morning'] ?? false;
+                medicine.afternoon =
+                    medicineData['timing']['afternoon'] ?? false;
+                medicine.evening = medicineData['timing']['evening'] ?? false;
+              }
+              disease.medicines.add(medicine);
+            }
+          }
+          _diseases.add(disease);
+        }
+      }
+
+      // Load emergency contacts
+      if (profileData['emergencyContacts'] != null &&
+          profileData['emergencyContacts'].isNotEmpty) {
+        _emergencyContacts.clear();
+        for (var contactData in profileData['emergencyContacts']) {
+          EmergencyContact contact = EmergencyContact();
+          contact.nameController.text = contactData['name'] ?? '';
+          contact.phoneController.text = contactData['phone'] ?? '';
+          _emergencyContacts.add(contact);
+        }
+      }
+
+      print('Form populated successfully with existing data');
+    } catch (e) {
+      print('Error populating form with data: $e');
+      _initializeEmptyForm();
+    }
+  }
+
+  void _initializeEmptyForm() {
+    // Ensure we have at least one disease and emergency contact
+    if (_diseases.isEmpty) {
+      _diseases = [DiseaseInfo()];
+    }
+    if (_emergencyContacts.isEmpty) {
+      _emergencyContacts = [EmergencyContact()];
+    }
+  }
+
+  void _showErrorMessage(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.orange,
+        duration: Duration(seconds: 3),
+      ),
+    );
   }
 
   @override
@@ -139,10 +197,91 @@ class _InformationFormState extends State<InformationForm> {
     _nameController.dispose();
     _phoneController.dispose();
     _dobController.dispose();
+
+    // Dispose disease controllers
+    for (var disease in _diseases) {
+      disease.dispose();
+    }
+
+    // Dispose emergency contact controllers
+    for (var contact in _emergencyContacts) {
+      contact.dispose();
+    }
+
     super.dispose();
   }
 
-  double size = data.size;
+  double get size => data.size;
+
+  // Enhanced form submission with better error handling
+  void _submitForm() async {
+    if (_formKey.currentState!.validate()) {
+      try {
+        _formKey.currentState!.save();
+
+        // Generate patient ID
+        String name = _nameController.text;
+        String dob = _dobController.text;
+        String bloodGroup = _selectedBloodGroup;
+        String patientId = getPatientID(name, dob, bloodGroup);
+
+        // Update data controller
+        data.set_patient_ID(patientId);
+        data.set_patient_name(name);
+        data.set_patient_dob(dob);
+        data.set_patient_blood_group(bloodGroup);
+        data.set_patient_phonenumber(_phoneController.text);
+
+        // Collect all form data
+        Map<String, dynamic> formData = {
+          'personalInfo': {
+            'name': _nameController.text,
+            'bloodGroup': _selectedBloodGroup,
+            'phone': _phoneController.text,
+            'dateOfBirth': _dobController.text,
+            'profileImagePath': _profileImage?.path ?? 'profile_image.png',
+          },
+          'diseases': _diseases.map((disease) => disease.toMap()).toList(),
+          'emergencyContacts':
+              _emergencyContacts.map((contact) => contact.toMap()).toList(),
+        };
+
+        // Save to both Firestore and local storage
+        final patientDatabase = PatientDatabase();
+        bool success = await patientDatabase.savePatientProfile(formData);
+
+        if (success) {
+          // Update session with complete profile data
+          await UserSession.saveUserSession(
+            patientId: patientId,
+            email: data.patient_email.value,
+            profileData: formData,
+          );
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Information saved successfully!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+
+          navigateWithLoading();
+        } else {
+          throw Exception('Failed to save profile data');
+        }
+      } catch (e) {
+        print('Error submitting form: $e');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error saving information. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  // Rest of your existing methods remain the same...
   Future<void> _pickImage() async {
     showModalBottomSheet(
       context: context,
@@ -329,52 +468,6 @@ class _InformationFormState extends State<InformationForm> {
     }
   }
 
-  void _submitForm() async {
-    if (_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-
-      String name = data.patient_name.value;
-      String dobb = data.patient_dob.value;
-      String bloodgroupp = data.patient_blood_group.value;
-
-      String pateint_id = getPatientID(name, dobb, bloodgroupp);
-
-      data.set_patient_ID(pateint_id);
-
-      // Collect all form data
-      Map<String, dynamic> formData = {
-        'personalInfo': {
-          'name': _nameController.text,
-          'bloodGroup': _selectedBloodGroup,
-          'phone': _phoneController.text,
-          'dateOfBirth': _dobController.text,
-          'profileImagePath': _profileImage?.path ?? 'profile_image.png',
-        },
-        'diseases': _diseases.map((disease) => disease.toMap()).toList(),
-        'emergencyContacts':
-            _emergencyContacts.map((contact) => contact.toMap()).toList(),
-      };
-
-      // Save the collected form data to Firestore using the PatientDatabase service.
-      // This returns true if the data was saved successfully, or false if there was an error.
-      final patientDatabase = PatientDatabase();
-      bool success = await patientDatabase.savePatientProfile(formData);
-
-      navigateWithLoading();
-
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Information saved successfully!'),
-          backgroundColor: Colors.green,
-        ),
-      );
-
-      // Navigate to home page
-      Navigator.pushReplacementNamed(context, '/home');
-    }
-  }
-
   Future<void> _selectDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -390,7 +483,6 @@ class _InformationFormState extends State<InformationForm> {
   }
 
   Widget _buildProfileImageSection() {
-    double size = data.size;
     return Container(
       margin: EdgeInsets.only(bottom: size / 20),
       child: Center(
@@ -447,8 +539,6 @@ class _InformationFormState extends State<InformationForm> {
 
   @override
   Widget build(BuildContext context) {
-    double size = data.size;
-
     // Show loading screen while data is being loaded
     if (_isLoadingData) {
       return Scaffold(
@@ -481,8 +571,21 @@ class _InformationFormState extends State<InformationForm> {
           iconTheme: IconThemeData(color: Colors.green.shade900),
         ),
         body: Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Color(0xff20C65D)),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Color(0xff20C65D)),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Loading your information...',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
           ),
         ),
       );
@@ -500,12 +603,11 @@ class _InformationFormState extends State<InformationForm> {
             icon: Icon(
               Icons.arrow_back,
               size: size / 12,
-              color: Colors.white, // Make sure icon is visible
+              color: Colors.white,
             ),
           ),
         ),
-        leadingWidth:
-            size / 6, // ✅ Increased from /10 to /6 for better tap area
+        leadingWidth: size / 6,
         title: Text(
           'Edit Patient Details',
           style: TextStyle(
@@ -543,14 +645,12 @@ class _InformationFormState extends State<InformationForm> {
                   _buildSectionHeader(
                       'Personal Information', Icons.person, Colors.blue),
                   _buildPersonalInfoSection(),
-
                   SizedBox(height: size / 10),
 
                   // Medical Information Section
                   _buildSectionHeader('Medical Information',
                       Icons.medical_services, Colors.green),
                   _buildMedicalInfoSection(),
-
                   SizedBox(height: size / 10),
 
                   // Emergency Contacts Section
@@ -560,7 +660,6 @@ class _InformationFormState extends State<InformationForm> {
                     Colors.red,
                   ),
                   _buildEmergencyContactsSection(),
-
                   SizedBox(height: size / 5),
 
                   // Submit Button
@@ -586,7 +685,6 @@ class _InformationFormState extends State<InformationForm> {
                       ),
                     ),
                   ),
-
                   SizedBox(height: size / 10),
                 ],
               ),
@@ -597,8 +695,11 @@ class _InformationFormState extends State<InformationForm> {
     );
   }
 
+  // Include all your existing build methods here...
+  // _buildSectionHeader, _buildPersonalInfoSection, _buildMedicalInfoSection, etc.
+  // (I'm keeping the existing implementation to save space)
+
   Widget _buildSectionHeader(String title, IconData icon, Color color) {
-    double size = data.size;
     return Container(
       margin: EdgeInsets.only(bottom: size / 25),
       child: Row(
@@ -619,7 +720,6 @@ class _InformationFormState extends State<InformationForm> {
   }
 
   Widget _buildPersonalInfoSection() {
-    double size = data.size;
     return Container(
       padding: EdgeInsets.all(size / 25),
       decoration: BoxDecoration(
@@ -784,7 +884,6 @@ class _InformationFormState extends State<InformationForm> {
   }
 
   Widget _buildMedicalInfoSection() {
-    double size = data.size;
     return Column(
       children: [
         ..._diseases.asMap().entries.map((entry) {
@@ -815,7 +914,6 @@ class _InformationFormState extends State<InformationForm> {
   }
 
   Widget _buildDiseaseCard(DiseaseInfo disease, int index) {
-    double size = data.size;
     return Container(
       margin: EdgeInsets.only(bottom: size / 15),
       padding: EdgeInsets.all(size / 15),
@@ -922,7 +1020,6 @@ class _InformationFormState extends State<InformationForm> {
 
   Widget _buildMedicineCard(
       DiseaseInfo disease, Medicine medicine, int medIndex) {
-    double size = data.size;
     return Container(
       margin: EdgeInsets.only(bottom: size / 20),
       padding: EdgeInsets.all(size / 20),
@@ -954,7 +1051,6 @@ class _InformationFormState extends State<InformationForm> {
             ],
           ),
           SizedBox(height: size / 35),
-
           Row(
             children: [
               Expanded(
@@ -1018,7 +1114,6 @@ class _InformationFormState extends State<InformationForm> {
             ],
           ),
           SizedBox(height: size / 30),
-
           // Meal Timing
           Align(
             alignment: Alignment.centerLeft,
@@ -1064,10 +1159,8 @@ class _InformationFormState extends State<InformationForm> {
               ),
             ],
           ),
-
           SizedBox(height: size / 40),
-
-          // Time of Day (FIXED)
+          // Time of Day
           Align(
             alignment: Alignment.centerLeft,
             child: Text('Time of Day:',
@@ -1134,7 +1227,6 @@ class _InformationFormState extends State<InformationForm> {
   }
 
   Widget _buildEmergencyContactsSection() {
-    double size = data.size;
     return Column(
       children: [
         ..._emergencyContacts.asMap().entries.map((entry) {
@@ -1165,7 +1257,6 @@ class _InformationFormState extends State<InformationForm> {
   }
 
   Widget _buildEmergencyContactCard(EmergencyContact contact, int index) {
-    double size = data.size;
     return Container(
       margin: EdgeInsets.only(bottom: size / 25),
       padding: EdgeInsets.all(size / 25),
@@ -1263,7 +1354,7 @@ class _InformationFormState extends State<InformationForm> {
   }
 }
 
-// Data Models
+// Data Models (keep your existing ones)
 class DiseaseInfo {
   final TextEditingController nameController = TextEditingController();
   List<Medicine> medicines = [Medicine()];
@@ -1296,7 +1387,6 @@ class DiseaseInfo {
 class Medicine {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
-
   bool beforeMeal = false;
   bool afterMeal = false;
   bool morning = false;

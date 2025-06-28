@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sanjeevika/services/patient_crud.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../utils/functions_uses.dart';
 
 // Reusable Medicine Order Card Widget
@@ -118,6 +119,9 @@ class _RefillPageState extends State<RefillPage> {
   List<Map<String, dynamic>> medicines = [];
   bool isLoading = true;
 
+  // WhatsApp phone number (with country code) - Update this with your actual number
+  final String whatsappNumber = '919238262562';
+
   @override
   void initState() {
     super.initState();
@@ -165,6 +169,41 @@ class _RefillPageState extends State<RefillPage> {
     }
 
     return '$timeText${mealText.isNotEmpty ? ' - $mealText' : ''}';
+  }
+
+  Future<void> _sendWhatsAppMessage(String medicineName, int quantity) async {
+    try {
+      String message = '''Hello! I would like to order a medicine refill:
+
+📋 Medicine: $medicineName
+📦 Quantity: $quantity pack(s)
+🏥 Type: Prescription Refill
+
+Please confirm the availability and delivery details.
+
+Thank you!''';
+
+      String encodedMessage = Uri.encodeComponent(message);
+      String whatsappUrl = 'whatsapp://send?phone=$whatsappNumber&text=$encodedMessage';
+
+      final uri = Uri.parse(whatsappUrl);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        // Open Play Store as fallback
+        final fallbackUri = Uri.parse("https://play.google.com/store/apps/details?id=com.whatsapp");
+        await launchUrl(fallbackUri, mode: LaunchMode.externalApplication);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error launching WhatsApp: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   void _showQuantityDialog(String medicineName) {
@@ -374,20 +413,31 @@ class _RefillPageState extends State<RefillPage> {
                         SizedBox(width: width * 0.03),
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               Navigator.of(context).pop();
+
+                              // Set state for success notification
                               setState(() {
                                 orderedQuantity = selectedQuantity;
                                 orderedMedicineName = medicineName;
                                 showSuccessNotification = true;
                               });
 
+                              // Send WhatsApp message
+                              await _sendWhatsAppMessage(medicineName, selectedQuantity);
+
+                              // Hide success notification after 3 seconds
                               Future.delayed(const Duration(seconds: 3), () {
                                 if (mounted) {
                                   setState(() {
                                     showSuccessNotification = false;
                                   });
                                 }
+                              });
+
+                              // Reset quantity
+                              setState(() {
+                                selectedQuantity = 1;
                               });
                             },
                             style: ElevatedButton.styleFrom(

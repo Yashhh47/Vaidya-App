@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sanjeevika/view/screens/medicine/refill_page.dart';
+import 'package:sanjeevika/view/screens/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'viewmodels/data_controller.dart';
 import 'utils/functions_uses.dart';
@@ -27,7 +27,7 @@ class Myapp extends StatelessWidget {
         double measuretxt = MediaQuery.of(context).size.width * 0.95;
         Get.find<Datacontroller>().Setsize(measuretxt);
 
-        return RefillPage();
+        return SplashScreen();
       }),
     );
   }

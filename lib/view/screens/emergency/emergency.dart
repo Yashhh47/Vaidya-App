@@ -28,11 +28,11 @@ class _EmergencyPageState extends State<EmergencyPage> {
       setState(() {
         emergencyContacts = contacts
             .map((contact) => {
-                  'name': contact['name'] ?? 'Unknown',
-                  'mobile':
-                      contact['phone']?.replaceAll('+91 ', '') ?? '0000000000',
-                  'designation': 'Emergency Contact'
-                })
+          'name': contact['name'] ?? 'Unknown',
+          'mobile':
+          contact['phone']?.replaceAll('+91 ', '') ?? '0000000000',
+          'designation': 'Emergency Contact'
+        })
             .toList();
         isLoading = false;
       });
@@ -106,17 +106,17 @@ class _EmergencyPageState extends State<EmergencyPage> {
                 Icon(Icons.shield_outlined,
                     color: Colors.red[600], size: width * 0.06),
                 SizedBox(width: width * 0.02),
-          Image(
-            image: AssetImage("assets/images/q.png"),
-            width: width * 0.038,
-          ),
-          Text(
-            "uick Access",
-            style: style_(
-              fontSize: width * 0.05,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+                Image(
+                  image: AssetImage("assets/images/q.png"),
+                  width: width * 0.038,
+                ),
+                Text(
+                  "uick Access",
+                  style: style_(
+                    fontSize: width * 0.05,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
             SizedBox(height: height * 0.02),
@@ -214,13 +214,13 @@ class _EmergencyPageState extends State<EmergencyPage> {
 
   Widget _buildEmergencyServiceButton(BuildContext context,
       {required String title,
-      String? subtitle,
-      required String number,
-      required Color color,
-      required VoidCallback onTap,
-      bool showIcon = false,
-      required double width,
-      required double height}) {
+        String? subtitle,
+        required String number,
+        required Color color,
+        required VoidCallback onTap,
+        bool showIcon = false,
+        required double width,
+        required double height}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -255,7 +255,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
                 style: style_(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
-                    fontSize: width * 0.03)),
+                    fontSize: width * 0.028)),
           ],
         ),
       ),
@@ -264,11 +264,11 @@ class _EmergencyPageState extends State<EmergencyPage> {
 
   Widget _buildContactCard(BuildContext context,
       {required String name,
-      required String role,
-      required String phone,
-      required VoidCallback onTap,
-      required double width,
-      required double height}) {
+        required String role,
+        required String phone,
+        required VoidCallback onTap,
+        required double width,
+        required double height}) {
     return Container(
       margin: EdgeInsets.only(bottom: height * 0.015),
       padding: EdgeInsets.all(width * 0.03),
@@ -359,7 +359,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
                 SizedBox(height: height * 0.01),
                 Text('Are you sure you want to call?',
                     style:
-                        style_(fontSize: width * 0.038, color: Colors.black54)),
+                    style_(fontSize: width * 0.038, color: Colors.black54)),
                 SizedBox(height: height * 0.02),
                 Container(
                   width: double.infinity,
