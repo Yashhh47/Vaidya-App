@@ -14,7 +14,7 @@
         <package android:name="com.whatsapp" />
     </queries>
     <application
-        android:label="sanjeevika"
+        android:label="Sanjeevika"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
