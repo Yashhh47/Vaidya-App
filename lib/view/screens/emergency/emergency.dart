@@ -28,11 +28,11 @@ class _EmergencyPageState extends State<EmergencyPage> {
       setState(() {
         emergencyContacts = contacts
             .map((contact) => {
-          'name': contact['name'] ?? 'Unknown',
-          'mobile':
-          contact['phone']?.replaceAll('+91 ', '') ?? '0000000000',
-          'designation': 'Emergency Contact'
-        })
+                  'name': contact['name'] ?? 'Unknown',
+                  'mobile':
+                      contact['phone']?.replaceAll('+91 ', '') ?? '0000000000',
+                  'designation': 'Emergency Contact'
+                })
             .toList();
         isLoading = false;
       });
@@ -214,13 +214,13 @@ class _EmergencyPageState extends State<EmergencyPage> {
 
   Widget _buildEmergencyServiceButton(BuildContext context,
       {required String title,
-        String? subtitle,
-        required String number,
-        required Color color,
-        required VoidCallback onTap,
-        bool showIcon = false,
-        required double width,
-        required double height}) {
+      String? subtitle,
+      required String number,
+      required Color color,
+      required VoidCallback onTap,
+      bool showIcon = false,
+      required double width,
+      required double height}) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -264,74 +264,78 @@ class _EmergencyPageState extends State<EmergencyPage> {
 
   Widget _buildContactCard(BuildContext context,
       {required String name,
-        required String role,
-        required String phone,
-        required VoidCallback onTap,
-        required double width,
-        required double height}) {
-    return Container(
-      margin: EdgeInsets.only(bottom: height * 0.015),
-      padding: EdgeInsets.all(width * 0.03),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(width * 0.06),
-        border: Border.all(color: const Color(0xFFFCA5A5)),
-        boxShadow: [
-          BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 4,
-              offset: const Offset(0, 2))
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: width * 0.1,
-            height: width * 0.1,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(width * 0.05),
-              boxShadow: const [
-                BoxShadow(
-                    color: Color(0x40000000),
-                    offset: Offset(0, 3),
-                    blurRadius: 5)
-              ],
-            ),
-            child: Icon(Icons.person_outline_outlined,
-                color: const Color(0xFFE53935), size: width * 0.075),
-          ),
-          SizedBox(width: width * 0.03),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(name,
-                    style: style_(
-                        fontSize: width * 0.035, fontWeight: FontWeight.bold)),
-                Text(role,
-                    style: style_(
-                        fontSize: width * 0.028, color: Colors.grey[600]!)),
-                Text(phone,
-                    style: style_(
-                        fontSize: width * 0.028, color: Colors.grey[700]!)),
-              ],
-            ),
-          ),
-          Row(
-            children: [
-              Text('Tap to call',
-                  style: style_(
-                      fontSize: width * 0.025, color: Colors.grey[600]!)),
-              SizedBox(width: width * 0.06),
-              GestureDetector(
-                onTap: onTap,
-                child: Icon(Icons.phone_outlined,
-                    color: Colors.red, size: width * 0.075),
+      required String role,
+      required String phone,
+      required VoidCallback onTap,
+      required double width,
+      required double height}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: width * 0.230,
+        margin: EdgeInsets.only(bottom: height * 0.015),
+        padding: EdgeInsets.all(width * 0.03),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(width * 0.06),
+          border: Border.all(color: const Color(0xFFFCA5A5)),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 4,
+                offset: const Offset(0, 2))
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: width * 0.1,
+              height: width * 0.1,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(width * 0.05),
+                boxShadow: const [
+                  BoxShadow(
+                      color: Color(0x40000000),
+                      offset: Offset(0, 3),
+                      blurRadius: 5)
+                ],
               ),
-            ],
-          ),
-        ],
+              child: Icon(Icons.person_outline_outlined,
+                  color: const Color(0xFFE53935), size: width * 0.080),
+            ),
+            SizedBox(width: width * 0.05),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name,
+                      style: style_(
+                          fontSize: width * 0.040,
+                          fontWeight: FontWeight.bold)),
+                  SizedBox(height: width * 0.0035),
+                  Text(role,
+                      style: style_(
+                          fontSize: width * 0.035, color: Colors.grey[600]!)),
+                  SizedBox(height: width * 0.0050),
+                  Text(phone,
+                      style: style_(
+                          fontSize: width * 0.040, color: Colors.grey[700]!)),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                Text('Tap to call',
+                    style: style_(
+                        fontSize: width * 0.035, color: Colors.grey[600]!)),
+                SizedBox(width: width * 0.06),
+                Icon(Icons.phone_outlined,
+                    color: Colors.red, size: width * 0.075),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -359,7 +363,7 @@ class _EmergencyPageState extends State<EmergencyPage> {
                 SizedBox(height: height * 0.01),
                 Text('Are you sure you want to call?',
                     style:
-                    style_(fontSize: width * 0.038, color: Colors.black54)),
+                        style_(fontSize: width * 0.038, color: Colors.black54)),
                 SizedBox(height: height * 0.02),
                 Container(
                   width: double.infinity,
