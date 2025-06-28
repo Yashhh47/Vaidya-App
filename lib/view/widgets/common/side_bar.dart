@@ -68,7 +68,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
   Widget _buildModernHeader() {
     return Container(
       width: double.infinity,
-      height: height * 0.35, // Responsive height
+      height: height * 0.25, // Responsive height
       decoration: BoxDecoration(
         gradient: const LinearGradient(
           colors: [
@@ -259,10 +259,10 @@ class _CustomSideBarState extends State<CustomSideBar> {
     return Column(
       children: items
           .map((item) => _buildEnhancedMenuItem(
-                icon: item.icon,
-                title: item.title,
-                onTap: item.onTap,
-              ))
+        icon: item.icon,
+        title: item.title,
+        onTap: item.onTap,
+      ))
           .toList(),
     );
   }
@@ -403,7 +403,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
       context,
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>
-            const MyMedicinePage(),
+        const MyMedicinePage(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return SlideTransition(
             position: animation.drive(
