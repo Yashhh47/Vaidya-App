@@ -32,7 +32,7 @@ class Myapp extends StatelessWidget {
         double measuretxt = MediaQuery.of(context).size.width * 0.95;
         Get.find<Datacontroller>().Setsize(measuretxt);
 
-        return getstartedscreen();
+        return SplashScreen();
       }),
     );
   }
