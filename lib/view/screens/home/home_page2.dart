@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:sanjeevika/viewmodels/data_controller.dart';
 import 'package:sanjeevika/view/screens/appointments/appointment_page.dart';
@@ -9,7 +8,7 @@ import 'package:sanjeevika/utils/functions_uses.dart';
 import 'package:get/get.dart';
 
 class QuickAccessSection extends StatefulWidget {
-  const QuickAccessSection({Key? key}) : super(key: key);
+  const QuickAccessSection({super.key});
 
   @override
   State<QuickAccessSection> createState() => _QuickAccessSectionState();

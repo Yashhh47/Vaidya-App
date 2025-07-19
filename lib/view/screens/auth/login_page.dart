@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sanjeevika/view/screens/onboarding/getstarted_screen.dart';
 import 'package:sanjeevika/view/widgets/common/loading_screen.dart';
-import '../home/home_page.dart';
 import '../../../utils/functions_uses.dart';
 import '../../../services/auth_functions.dart';
-import 'package:get/get.dart';
 import 'package:sanjeevika/viewmodels/data_controller.dart';
 import 'package:sanjeevika/services/user_session.dart'; // Updated import
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -149,7 +149,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
                 SizedBox(height: size / 15),
                 Text(
-                  'Sanjeevika',
+                  'Vaidya',
                   style: TextStyle(
                     fontSize: size / 12,
                     fontWeight: FontWeight.w900,
@@ -230,6 +230,7 @@ class _LoginPageState extends State<LoginPage> {
                             return 'Please enter phone number';
                           } else if (value.toString().length != 10)
                             return "Please enter a valid phone number";
+                          return null;
                         },
                       ),
                       SizedBox(height: size / 30),

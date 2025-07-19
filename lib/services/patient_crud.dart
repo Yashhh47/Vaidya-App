@@ -1,6 +1,4 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:sanjeevika/services/user_session.dart';
 import 'package:sanjeevika/services/medicine_status_service.dart';
 import 'package:sanjeevika/viewmodels/data_controller.dart';

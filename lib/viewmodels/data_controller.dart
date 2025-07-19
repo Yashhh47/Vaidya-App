@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class Datacontroller extends GetxController {
@@ -45,8 +44,8 @@ class Datacontroller extends GetxController {
     patient_phonenumber.value = phonenumber;
   }
 
-  void set_patient_blood_group(String blood_group) {
-    patient_blood_group.value = blood_group;
+  void set_patient_blood_group(String bloodGroup) {
+    patient_blood_group.value = bloodGroup;
   }
 
   void Setsize(double size) {

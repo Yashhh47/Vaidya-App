@@ -1,7 +1,7 @@
-# 💚 Sanjeevika – Smart Health Manager  
+# 💚 Vaidya – Smart Health Manager  
 **Crafted with Flutter · Powered by Firebase · Built to Save Lives**
 
-**Sanjeevika** is your intelligent companion for managing medicines, emergencies, and healthcare data — all in one place. Built for patients, families, and doctors, it simplifies routines, improves medication adherence, and ensures vital information is always accessible, especially in critical situations.
+**Vaidya** is your intelligent companion for managing medicines, emergencies, and healthcare data — all in one place. Built for patients, families, and doctors, it simplifies routines, improves medication adherence, and ensures vital information is always accessible, especially in critical situations.
 
 **[Download APK](https://drive.google.com/file/d/1rVQwrURCPrlP7Y_DvHe4vQCnwIANuXC0/view?usp=sharing)** 
 
@@ -10,7 +10,7 @@
 ## 📱 App Preview
 
 <p align="center">
-  <img src="screenshot.png" alt="Sanjeevika App Screens Preview" width="100%" />
+  <img src="screenshot.png" alt="Vaidya App Screens Preview" width="100%" />
 </p>
 
 ---
@@ -99,7 +99,7 @@ Elderly users with diabetes, hypertension, or arthritis can:
 - Get **reminders** for multiple medicines per day  
 - **Call emergency services** or doctors with one tap in emergencies  
 
-### 👨‍⚕️ For Doctors & Clinics *(via Dr. Sanjeevika App)*
+### 👨‍⚕️ For Doctors & Clinics *(via Dr. Vaidya App)*
 - View patient health records anytime via secure code  
 - Avoid paper prescriptions and track allergies or history  
 - Reduces delays in emergency treatment
@@ -109,20 +109,12 @@ Elderly users with diabetes, hypertension, or arthritis can:
 - Understand whether to take a medicine before/after meals  
 - Track whether you’ve taken today’s dose with clear, visual UI  
 
-> 📌 Whether you're a patient, a caregiver, or a healthcare provider — **Sanjeevika** adapts to your role and makes health management easier, safer, and smarter.
+> 📌 Whether you're a patient, a caregiver, or a healthcare provider — **Vaidya** adapts to your role and makes health management easier, safer, and smarter.
 
 
-## 👨‍💻 Meet Team Sanjeevani
+## 👨‍💻 Meet Team Vaidya
 
 A team of passionate developers from **IIIT Bhopal** and **SGSITS Indore**, committed to transforming how healthcare is accessed, managed, and shared.
-
-| Name | Skills | Institution | LinkedIn |
-|------|--------|-------------|----------|
-| **Yajur Chatnani** | App Dev · Python · Kotlin · C++ | IIIT Bhopal | [LinkedIn](https://www.linkedin.com/in/yajurchatnani) |
-| **Keshav Garg** | Flutter · UI/UX · C++ · CP | IIIT Bhopal | [LinkedIn](https://www.linkedin.com/in/keshavgarg8605) |
-| **Tanishq Shrivas** | Flutter · C++ | IIIT Bhopal | [LinkedIn](https://www.linkedin.com/in/tanishq-shrivas-815927324/) |
-| **Astitva Bandil** | AI/ML · Python · NLP | SGSITS Indore | [LinkedIn](https://www.linkedin.com/in/astitva-bandil-a325a2299) |
-
 ---
 
-Thank you for exploring **Sanjeevika** – where smart tech meets smart care 💊
+Thank you for exploring **vaidya** – where smart tech meets smart care 💊

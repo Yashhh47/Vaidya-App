@@ -30,6 +30,8 @@ TextStyle style_({
 }
 
 class TodaysMedicationsSection extends StatefulWidget {
+  const TodaysMedicationsSection({super.key});
+
   @override
   _TodaysMedicationsSectionState createState() =>
       _TodaysMedicationsSectionState();

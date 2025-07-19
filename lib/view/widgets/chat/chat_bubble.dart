@@ -6,10 +6,10 @@ class ChatBubble extends StatelessWidget {
   final bool isLoading;
 
   const ChatBubble({
-    Key? key,
+    super.key,
     required this.message,
     this.isLoading = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class ChatBubble extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Sanjeevika is typing...',
+                          'Vaidya is typing...',
                           style: TextStyle(
                             color: Colors.grey.shade600,
                             fontSize: 14,
@@ -88,11 +88,11 @@ class ChatBubble extends StatelessWidget {
                         height: 1.4,
                       ),
                     ),
-                  if (!isLoading && message.timestamp != null)
+                  if (!isLoading)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
-                        _formatTime(message.timestamp!),
+                        _formatTime(message.timestamp),
                         style: TextStyle(
                           color: message.isUser
                               ? Colors.white.withOpacity(0.7)

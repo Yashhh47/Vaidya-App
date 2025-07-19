@@ -10,7 +10,7 @@ class MyMedicinePage extends StatefulWidget {
 
 class _MyMedicinePageState extends State<MyMedicinePage> {
   final _formKey = GlobalKey<FormState>();
-  List<DiseaseInfo> _diseases = [DiseaseInfo()];
+  final List<DiseaseInfo> _diseases = [DiseaseInfo()];
 
   @override
   void dispose() {
@@ -155,7 +155,7 @@ class _MyMedicinePageState extends State<MyMedicinePage> {
           int index = entry.key;
           DiseaseInfo disease = entry.value;
           return _buildDiseaseCard(disease, index, width, height);
-        }).toList(),
+        }),
         SizedBox(height: height * 0.02),
         ElevatedButton.icon(
           onPressed: _addDisease,
@@ -272,7 +272,7 @@ class _MyMedicinePageState extends State<MyMedicinePage> {
             Medicine medicine = entry.value;
             return _buildMedicineCard(
                 disease, medicine, medIndex, width, height);
-          }).toList(),
+          }),
           SizedBox(height: height * 0.02),
           ElevatedButton.icon(
             onPressed: () => _addMedicine(disease),

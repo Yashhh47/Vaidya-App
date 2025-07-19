@@ -10,6 +10,8 @@ import '../home/home_page.dart';
 import '../../../services/data_fucntions.dart';
 
 class InformationForm extends StatefulWidget {
+  const InformationForm({super.key});
+
   @override
   _InformationFormState createState() => _InformationFormState();
 }
@@ -890,7 +892,7 @@ class _InformationFormState extends State<InformationForm> {
           int index = entry.key;
           DiseaseInfo disease = entry.value;
           return _buildDiseaseCard(disease, index);
-        }).toList(),
+        }),
         SizedBox(height: size / 65),
         ElevatedButton.icon(
           onPressed: _addDisease,
@@ -993,7 +995,7 @@ class _InformationFormState extends State<InformationForm> {
             int medIndex = entry.key;
             Medicine medicine = entry.value;
             return _buildMedicineCard(disease, medicine, medIndex);
-          }).toList(),
+          }),
           SizedBox(height: size / 45),
           ElevatedButton.icon(
             onPressed: () => disease.addMedicine(),
@@ -1233,7 +1235,7 @@ class _InformationFormState extends State<InformationForm> {
           int index = entry.key;
           EmergencyContact contact = entry.value;
           return _buildEmergencyContactCard(contact, index);
-        }).toList(),
+        }),
         SizedBox(height: size / 55),
         ElevatedButton.icon(
           onPressed: _addEmergencyContact,

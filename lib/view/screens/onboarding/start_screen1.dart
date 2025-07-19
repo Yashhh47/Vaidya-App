@@ -7,6 +7,8 @@ import 'start_screen2.dart';
 double size = SizeConfig.screenWidth;
 
 class StartScreen1 extends StatelessWidget {
+  const StartScreen1({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

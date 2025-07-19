@@ -3,11 +3,12 @@ import 'package:sanjeevika/view/screens/auth/login_page.dart';
 
 import '../../../utils/functions_uses.dart';
 import 'package:get/get.dart';
-import 'start_screen2.dart';
 
 double size = SizeConfig.screenWidth;
 
 class StartScreen3 extends StatefulWidget {
+  const StartScreen3({super.key});
+
   @override
   State<StartScreen3> createState() => _StartScreen3State();
 }

@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'start_screen3.dart';
 import '../../../utils/functions_uses.dart';
 import 'package:get/get.dart';
-import 'start_screen2.dart';
 
 double size = SizeConfig.screenWidth;
 
 class StartScreen2 extends StatefulWidget {
+  const StartScreen2({super.key});
+
   @override
   State<StartScreen2> createState() => _StartScreen2State();
 }

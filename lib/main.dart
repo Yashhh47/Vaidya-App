@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sanjeevika/view/screens/onboarding/getstarted_screen.dart';
 import 'package:sanjeevika/view/screens/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'viewmodels/data_controller.dart';

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:sanjeevika/view/screens/profile/yajurnew_information_form.dart';
 import '../../../viewmodels/data_controller.dart';
-import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 
 class loading_screen extends StatefulWidget {

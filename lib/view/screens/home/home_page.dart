@@ -10,7 +10,7 @@ import 'package:sanjeevika/services/patient_crud.dart';
 import 'package:sanjeevika/services/medicine_status_service.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                       child: _buildMissedMedicineCard(
                           width, height, medicine, index),
                     );
-                  }).toList(),
+                  }),
 
                 // Your original components - keeping them exactly as they were
                 TodaysMedicationsSection(),
@@ -194,13 +194,13 @@ class _HomePageState extends State<HomePage> {
       automaticallyImplyLeading: true,
       backgroundColor: const Color(0xFFD7F3B8),
       elevation: 0,
-      titleSpacing: -10,
+      titleSpacing: -6,
       title: Row(
         children: [
           _buildAppBarLogo(width, height),
-          SizedBox(width: width * 0.01),
+          SizedBox(width: width * 0.03),
           Text(
-            'Sanjeevika',
+            'Vaidya',
             style: style_(
               color: Color(0xFF005014),
               fontWeight: FontWeight.w900,
@@ -219,8 +219,8 @@ class _HomePageState extends State<HomePage> {
   Widget _buildAppBarLogo(double width, double height) {
     return Image.asset(
       'assets/images/sanjeevikalogo.png',
-      height: width * 0.13,
-      width: width * 0.14,
+      height: width * 0.14,
+      width: width * 0.16,
       errorBuilder: (context, error, stackTrace) {
         return Container(
           height: width * 0.12,

@@ -43,7 +43,7 @@ class _getstartedscreenState extends State<getstartedscreen> {
                   SizedBox(height: size / 3),
                   Image.asset(
                     'assets/images/sanjeevikalogo.png',
-                    width: size / 4,
+                    width: size / 2,
                   ),
                   SizedBox(height: size / 10),
                   Row(
@@ -58,7 +58,7 @@ class _getstartedscreenState extends State<getstartedscreen> {
                         ),
                       ),
                       Text(
-                        'Sanjeevika”',
+                        'Vaidya',
                         style: TextStyle(
                           color: const Color(0xFF005014),
                           fontWeight: FontWeight.w900,

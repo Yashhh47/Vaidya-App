@@ -104,7 +104,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Sanjeevika',
+                          'Vaidya',
                           style: style_(
                             fontSize: width * 0.065, // 6.5% of screen width
                             fontWeight: FontWeight.bold,
@@ -234,7 +234,7 @@ class _CustomSideBarState extends State<CustomSideBar> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '~Made by Team Sanjeevni 💚',
+                '~Made by Team Vaidya 💚',
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontFamily: 'Montserrat',

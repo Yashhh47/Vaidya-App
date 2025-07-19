@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../../utils/functions_uses.dart';
 import 'package:get/get.dart';
 import 'package:sanjeevika/view/screens/onboarding/start_screen1.dart';
 import 'package:sanjeevika/view/screens/home/home_page.dart';
 import 'package:sanjeevika/services/user_session.dart';
 
 class SplashScreen extends StatefulWidget {
+  const SplashScreen({super.key});
+
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -42,6 +43,8 @@ class _SplashScreenState extends State<SplashScreen> {
 }
 
 class SplashScreenWidget extends StatelessWidget {
+  const SplashScreenWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     double size = MediaQuery.of(context).size.width * 0.95;

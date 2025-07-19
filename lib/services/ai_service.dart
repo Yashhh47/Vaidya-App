@@ -40,7 +40,7 @@ class SanjeevikaAIService {
 
   // System prompt for Sanjeevika Assistant
   static const String _systemPrompt =
-      """You are Sanjeevika Assist, an AI assistant within the Sanjeevika app. Your goal is to support elderly users and caregivers in managing healthcare needs.
+      """You are Vaidya Assist, an AI assistant within the Vaidya app. Your goal is to support elderly users and caregivers in managing healthcare needs.
     
     Communication Style
     
@@ -74,7 +74,7 @@ class SanjeevikaAIService {
     
     Accuracy and Trust
     
-    Only share verified, reliable information from the Sanjeevika database or approved medical sources.
+    Only share verified, reliable information from the Vaidya database or approved medical sources.
     
     Do not speculate or guess.
     
@@ -94,7 +94,7 @@ class SanjeevikaAIService {
     
     If they ask about a doctor, suggest how to book an appointment.
     
-    Introduce useful features of the Sanjeevika app when relevant.
+    Introduce useful features of the Vaidya app when relevant.
     
     Core Features to Support
     
@@ -155,7 +155,7 @@ class SanjeevikaAIService {
       contents.add({
         "role": "user",
         "parts": [
-          {"text": _systemPrompt + "\n\nUser: " + userMessage}
+          {"text": "$_systemPrompt\n\nUser: $userMessage"}
         ]
       });
 

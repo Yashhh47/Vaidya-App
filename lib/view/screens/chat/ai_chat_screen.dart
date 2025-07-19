@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:sanjeevika/utils/functions_uses.dart';
 import '../../../services/ai_service.dart';
 
 class AiPage extends StatefulWidget {
@@ -16,7 +15,7 @@ class _AiPageState extends State<AiPage> {
   final List<ChatMessage> _messages = [
     ChatMessage(
       text:
-          "Hello! Welcome to Sanjeevika App. I'm your AI health assistant.\nHow can I help you today?",
+          "Hello! Welcome to Vaidya App. I'm your AI health assistant.\nHow can I help you today?",
       isBot: true,
       time: "",
     ),
@@ -112,7 +111,7 @@ class _AiPageState extends State<AiPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Sanjeevika AI Chat Assistant',
+                  'Vaidya AI Chat Assistant',
                   style: TextStyle(
                     color: Color(0xFF003313),
                     fontSize: 15,
