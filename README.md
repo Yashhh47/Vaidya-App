@@ -10,16 +10,11 @@
 ## 📱 App Preview
 
 <p align="center">
-  <img src="screenshot.png" alt="Vaidya App Screens Preview" width="100%" />
+  <img src="https://github.com/user-attachments/assets/a02abcd5-afed-45d7-957b-9b08cbd98217" alt="Vaidya App Screens Preview" width="100%" />
 </p>
 
 ---
 
-## 🎥 Demo Video (Clickable)
-
-[![Watch the demo](https://img.youtube.com/vi/C6wPOIYqN1c/0.jpg)](https://youtu.be/C6wPOIYqN1c)
-
----
 
 ## ✨ Key Features
 
